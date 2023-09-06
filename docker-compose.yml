@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  minapi:
+    image: ${DOCKER_REGISTRY-}minapi
+    build:
+      context: .
+      dockerfile: MinAPI/Dockerfile
+    ports:
+        - "8080:80"
+        - "8081:443"
+    depends_on:
+        - db
+  db:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+        - "1433:1433"
+    environment:
+        SA_PASSWORD: /run/secrets/sa_pw
+        ACCEPT_EULA: "Y"
+secrets:
+    sa_pw:
+        file: sa_pw.txt
+
