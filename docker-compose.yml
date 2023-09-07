@@ -16,9 +16,6 @@ services:
     ports:
         - "1433:1433"
     environment:
-        SA_PASSWORD: /run/secrets/sa_pw
+        MSSQL_SA_PASSWORD: "jeh7he89u534758Ghe54"
         ACCEPT_EULA: "Y"
-secrets:
-    sa_pw:
-        file: sa_pw.txt
 
