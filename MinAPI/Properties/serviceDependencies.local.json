@@ -6,9 +6,9 @@
       "secretStore": "LocalSecretsFile",
       "containerName": "mssql",
       "containerImage": "mcr.microsoft.com/mssql/server:2019-latest",
+      "resourceId": null,
       "type": "mssql.container",
-      "connectionId": "ConnectionString",
-      "dynamicId": null
+      "connectionId": "ConnectionString"
     }
   }
 }

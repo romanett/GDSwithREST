@@ -25,18 +25,13 @@ namespace MinAPI.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            /*
             if (!optionsBuilder.IsConfigured)
             {
-                var conStrBuilder = new SqlConnectionStringBuilder(
-                    Configuration.GetConnectionString("Default"))
-                {
-                    Password = Configuration["DbPassword"]
-                };
-
-                var connection = conStrBuilder.ConnectionString;
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Database=gdsdb;");
             }
+            */
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -5,6 +5,7 @@ using Opc.Ua.Configuration;
 using Opc.Ua;
 using Opc.Ua.Gds.Server;
 using Microsoft.AspNetCore.Hosting.Server;
+using MinAPI.Data;
 
 ApplicationInstance application = new ApplicationInstance
 {
@@ -43,7 +44,7 @@ var conStrBuilder = new SqlConnectionStringBuilder(
     Password = builder.Configuration["DbPassword"]
 };
 var connection = conStrBuilder.ConnectionString;
-builder.Services.AddDbContext<DbContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<gdsdbContext>(options => options.UseSqlServer(connection));
 var app = builder.Build();
 
 
