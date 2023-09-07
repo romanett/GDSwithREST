@@ -7,6 +7,7 @@ namespace MinAPI
 {
     public class GdsDatabase : ApplicationsDatabaseBase, ICertificateRequest
     {
+        #region ICertifiateRequest
         public void AcceptRequest(NodeId requestId, byte[] certificate)
         {
             throw new NotImplementedException();
@@ -36,5 +37,6 @@ namespace MinAPI
         {
             throw new NotImplementedException();
         }
+        #endregion
     }
 }
