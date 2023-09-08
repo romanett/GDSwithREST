@@ -21,8 +21,8 @@ namespace MinAPI
         #region IApplicationsDatabase
         public override void Initialize()
         {
-             _context.Database.Migrate();
-            _context.Database.EnsureCreated();
+            _context.Database.Migrate();
+            //_context.Database.EnsureCreated();
         }
         #endregion
         #region ICertifiateRequest

@@ -23,14 +23,14 @@ application.CheckApplicationInstanceCertificate(false, 0).Wait();
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-//var conStrBuilder = new SqlConnectionStringBuilder(
-//    builder.Configuration.GetConnectionString("Default"))
-//{
-//    Password = builder.Configuration["DbPassword"]
-//};
-//var connection = conStrBuilder.ConnectionString;
-builder.Services.AddDbContext<GdsdbContext>(options => options.UseSqlServer("Server = db, 1433; Database = tempdb; User ID = sa; Password =jeh7he89u534758Ghe54; Persist Security Info=False; TrustServerCertificate = true;"));
+// Inject database dependency
+var conStrBuilder = new SqlConnectionStringBuilder(
+    builder.Configuration.GetConnectionString("Default"))
+{
+    Password = builder.Configuration["DbPassword"]
+};
+var connection = conStrBuilder.ConnectionString;
+builder.Services.AddDbContext<GdsdbContext>(options => options.UseSqlServer(connection));
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");
