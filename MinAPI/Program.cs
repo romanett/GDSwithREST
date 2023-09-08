@@ -31,6 +31,7 @@ var conStrBuilder = new SqlConnectionStringBuilder(
 };
 var connection = conStrBuilder.ConnectionString;
 builder.Services.AddDbContext<GdsdbContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
 app.MapGet("/", () => "Hello World!");

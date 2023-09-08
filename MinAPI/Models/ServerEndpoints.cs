@@ -7,8 +7,8 @@ namespace MinAPI.Models
     {
         public int Id { get; set; }
         public int ApplicationId { get; set; }
-        public string DiscoveryUrl { get; set; }
+        public string DiscoveryUrl { get; set; } = null!;
 
-        public Applications Application { get; set; }
+        public Applications Application { get; set; } = null!;
     }
 }

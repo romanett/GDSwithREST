@@ -12,8 +12,8 @@ namespace MinAPI.Models
         }
 
         public int Id { get; set; }
-        public string Path { get; set; }
-        public string AuthorityId { get; set; }
+        public string Path { get; set; } = null!;
+        public string AuthorityId { get; set; } = null!;
 
         public ICollection<Applications> ApplicationsHttpsTrustList { get; set; }
         public ICollection<Applications> ApplicationsTrustList { get; set; }

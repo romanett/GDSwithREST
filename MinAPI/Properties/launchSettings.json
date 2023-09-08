@@ -28,10 +28,13 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
+      "DockerfileRunArguments": "-p 58810:58810",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
         "ASPNETCORE_URLS": "https://+:443;http://+:80"
       },
+      "httpPort": 8080,
+      "sslPort": 8081,
       "publishAllPorts": true,
       "useSSL": true
     }
