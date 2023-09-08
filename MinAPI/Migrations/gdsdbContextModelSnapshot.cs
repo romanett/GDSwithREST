@@ -10,8 +10,8 @@ using MinAPI.Data;
 
 namespace MinAPI.Migrations
 {
-    [DbContext(typeof(gdsdbContext))]
-    partial class gdsdbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(GdsdbContext))]
+    partial class GdsdbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -244,14 +244,12 @@ namespace MinAPI.Migrations
                     b.HasOne("MinAPI.Models.CertificateStores", "HttpsTrustList")
                         .WithMany("ApplicationsHttpsTrustList")
                         .HasForeignKey("HttpsTrustListId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Applications_HttpsTrustListId");
 
                     b.HasOne("MinAPI.Models.CertificateStores", "TrustList")
                         .WithMany("ApplicationsTrustList")
                         .HasForeignKey("TrustListId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Applications_TrustListId");
 

@@ -1,12 +1,30 @@
-﻿using Opc.Ua;
+﻿using Microsoft.EntityFrameworkCore;
+using MinAPI.Data;
+using Opc.Ua;
 using Opc.Ua.Gds;
 using Opc.Ua.Gds.Server;
 using Opc.Ua.Gds.Server.Database;
+using System.Reflection;
 
 namespace MinAPI
 {
     public class GdsDatabase : ApplicationsDatabaseBase, ICertificateRequest
     {
+        private readonly GdsdbContext _context;
+
+        public GdsDatabase(GdsdbContext context)
+        {
+            _context = context;
+        }
+
+
+        #region IApplicationsDatabase
+        public override void Initialize()
+        {
+             _context.Database.Migrate();
+            _context.Database.EnsureCreated();
+        }
+        #endregion
         #region ICertifiateRequest
         public void AcceptRequest(NodeId requestId, byte[] certificate)
         {

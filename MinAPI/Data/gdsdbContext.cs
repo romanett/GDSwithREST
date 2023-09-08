@@ -2,17 +2,18 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using MinAPI.Models;
 
 namespace MinAPI.Data
 {
-    public partial class gdsdbContext : DbContext
+    public partial class GdsdbContext : DbContext
     {
-        public gdsdbContext()
+        public GdsdbContext()
         {
         }
 
-        public gdsdbContext(DbContextOptions<gdsdbContext> options)
+        public GdsdbContext(DbContextOptions<GdsdbContext> options)
             : base(options)
         {
         }
@@ -39,7 +40,7 @@ namespace MinAPI.Data
             modelBuilder.Entity<ApplicationNames>(entity =>
             {
                 entity.HasIndex(e => e.ApplicationId)
-                    .HasName("IX_FK_ApplicationNames_ApplicationId");
+                    .HasDatabaseName("IX_FK_ApplicationNames_ApplicationId");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -58,10 +59,10 @@ namespace MinAPI.Data
             modelBuilder.Entity<Applications>(entity =>
             {
                 entity.HasIndex(e => e.HttpsTrustListId)
-                    .HasName("IX_FK_Applications_HttpsTrustListId");
+                    .HasDatabaseName("IX_FK_Applications_HttpsTrustListId");
 
                 entity.HasIndex(e => e.TrustListId)
-                    .HasName("IX_FK_Applications_TrustListId");
+                    .HasDatabaseName("IX_FK_Applications_TrustListId");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -82,18 +83,20 @@ namespace MinAPI.Data
                 entity.HasOne(d => d.HttpsTrustList)
                     .WithMany(p => p.ApplicationsHttpsTrustList)
                     .HasForeignKey(d => d.HttpsTrustListId)
-                    .HasConstraintName("FK_Applications_HttpsTrustListId");
+                    .HasConstraintName("FK_Applications_HttpsTrustListId")
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entity.HasOne(d => d.TrustList)
                     .WithMany(p => p.ApplicationsTrustList)
                     .HasForeignKey(d => d.TrustListId)
-                    .HasConstraintName("FK_Applications_TrustListId");
+                    .HasConstraintName("FK_Applications_TrustListId")
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             modelBuilder.Entity<CertificateRequests>(entity =>
             {
                 entity.HasIndex(e => e.ApplicationId)
-                    .HasName("IX_FK_CertificateRequests_Applications");
+                    .HasDatabaseName("IX_FK_CertificateRequests_Applications");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -133,7 +136,7 @@ namespace MinAPI.Data
             modelBuilder.Entity<ServerEndpoints>(entity =>
             {
                 entity.HasIndex(e => e.ApplicationId)
-                    .HasName("IX_FK_ServerEndpoints_ApplicationId");
+                    .HasDatabaseName("IX_FK_ServerEndpoints_ApplicationId");
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 

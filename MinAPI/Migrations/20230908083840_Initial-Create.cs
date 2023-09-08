@@ -49,14 +49,12 @@ namespace MinAPI.Migrations
                         name: "FK_Applications_HttpsTrustListId",
                         column: x => x.HttpsTrustListId,
                         principalTable: "CertificateStores",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                     table.ForeignKey(
                         name: "FK_Applications_TrustListId",
                         column: x => x.TrustListId,
                         principalTable: "CertificateStores",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(

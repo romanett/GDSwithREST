@@ -11,8 +11,8 @@ using MinAPI.Data;
 
 namespace MinAPI.Migrations
 {
-    [DbContext(typeof(gdsdbContext))]
-    [Migration("20230907111134_InitialCreate")]
+    [DbContext(typeof(GdsdbContext))]
+    [Migration("20230908083840_Initial-Create")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -247,14 +247,12 @@ namespace MinAPI.Migrations
                     b.HasOne("MinAPI.Models.CertificateStores", "HttpsTrustList")
                         .WithMany("ApplicationsHttpsTrustList")
                         .HasForeignKey("HttpsTrustListId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Applications_HttpsTrustListId");
 
                     b.HasOne("MinAPI.Models.CertificateStores", "TrustList")
                         .WithMany("ApplicationsTrustList")
                         .HasForeignKey("TrustListId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_Applications_TrustListId");
 
