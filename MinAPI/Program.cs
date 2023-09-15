@@ -6,10 +6,12 @@ using Opc.Ua.Gds.Server;
 using Microsoft.AspNetCore.Hosting.Server;
 using MinAPI.Data;
 using MinAPI.Services.GdsBackgroundService;
+using Microsoft.Extensions.DependencyInjection;
 
 
 #region webApplicationBuilder
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<IGdsService, GdsService>();
 builder.Services.AddHostedService<GdsBackgroundService>();
 
 // Inject database dependency
@@ -28,6 +30,6 @@ var app = builder.Build();
 
 
 app.MapGet("/", () => "Hello World");
-app.MapGet("/Endpoints", (IGdsBackgroundService gds) => gds.GetEndpoints());
+app.MapGet("/Endpoints", (IGdsService gds) => gds.GetEndpoints());
 app.Run();
 
