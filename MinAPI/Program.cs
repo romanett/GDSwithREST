@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 #region webApplicationBuilder
 var builder = WebApplication.CreateBuilder(args);
+//Inject dependency for accessing the GDS and adding the Hosted Service running the GDS
 builder.Services.AddSingleton<IGdsService, GdsService>();
 builder.Services.AddHostedService<GdsBackgroundService>();
-
 // Inject database dependency
 var conStrBuilder = new SqlConnectionStringBuilder(
     builder.Configuration.GetConnectionString("Default"))
