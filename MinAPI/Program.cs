@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 //Inject dependency for accessing the GDS and adding the Hosted Service running the GDS
 builder.Services.AddSingleton<IGdsService, GdsService>();
 builder.Services.AddHostedService<GdsBackgroundService>();
+builder.Services.AddControllers();
 // Inject database dependency
 var conStrBuilder = new SqlConnectionStringBuilder(
     builder.Configuration.GetConnectionString("Default"))
@@ -26,8 +27,6 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
 #endregion
-
-
 
 app.MapGet("/", () => "Hello World");
 app.MapGet("/Endpoints", (IGdsService gds) => gds.GetEndpoints());
