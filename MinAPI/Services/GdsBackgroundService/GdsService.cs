@@ -33,6 +33,7 @@ namespace MinAPI.Services.GdsBackgroundService
                 await _application.CheckApplicationInstanceCertificate(false, 0);
 
                 var database = new GdsDatabase(_serviceScopeFactory);
+                database.Initialize();
                 var gdsServer = new GlobalDiscoverySampleServer(
                         database,
                         database,
