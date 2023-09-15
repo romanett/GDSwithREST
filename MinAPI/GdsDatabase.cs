@@ -10,18 +10,20 @@ namespace MinAPI
 {
     public class GdsDatabase : ApplicationsDatabaseBase, ICertificateRequest
     {
-        private readonly GdsdbContext _context;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public GdsDatabase(GdsdbContext context)
+        public GdsDatabase(IServiceScopeFactory serviceScopeFactory)
         {
-            _context = context;
+                _serviceScopeFactory = serviceScopeFactory;
         }
 
 
         #region IApplicationsDatabase
         public override void Initialize()
         {
-            _context.Database.Migrate();
+            using var scope = _serviceScopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            context.Database.Migrate();
         }
         #endregion
         #region ICertifiateRequest
