@@ -1,4 +1,5 @@
-﻿using Opc.Ua;
+﻿using GDSwithREST.Services.GdsBackgroundService;
+using Opc.Ua;
 using Opc.Ua.Configuration;
 using Opc.Ua.Gds.Server;
 using System.Collections.ObjectModel;
@@ -9,11 +10,11 @@ namespace MinAPI.Services.GdsBackgroundService
     {
 
         private ApplicationInstance? _application;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IGdsDatabase _database;
 
-        public GdsService(IServiceScopeFactory serviceScopeFactory)
+        public GdsService(IGdsDatabase database)
         {
-            _serviceScopeFactory = serviceScopeFactory;
+            _database = database;
         }
 
         public async Task StartServer(CancellationToken stoppingToken)
@@ -32,11 +33,10 @@ namespace MinAPI.Services.GdsBackgroundService
                 // check the application certificate.
                 await _application.CheckApplicationInstanceCertificate(false, 0);
 
-                var database = new GdsDatabase(_serviceScopeFactory);
-                database.Initialize();
+                _database.Initialize();
                 var gdsServer = new GlobalDiscoverySampleServer(
-                        database,
-                        database,
+                        _database,
+                        _database,
                         new CertificateGroup()
                        );
 

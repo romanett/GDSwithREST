@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GDSwithREST.Services.GdsBackgroundService;
+using Microsoft.EntityFrameworkCore;
 using MinAPI.Data;
 using MinAPI.Models;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ using System.Reflection;
 
 namespace MinAPI.Services.GdsBackgroundService
 {
-    public class GdsDatabase : ApplicationsDatabaseBase, ICertificateRequest
+    public class GdsDatabase : ApplicationsDatabaseBase, IGdsDatabase
     {
         private DateTime m_lastCounterResetTime = DateTime.MinValue;
         private readonly IServiceScopeFactory _serviceScopeFactory;
@@ -122,7 +123,7 @@ namespace MinAPI.Services.GdsBackgroundService
         {
             Guid id = GetNodeIdGuid(applicationId);
 
-            List<byte[]> certificates = new List<byte[]>();
+            List<byte[]> certificates = new();
 
 
             using var scope = _serviceScopeFactory.CreateScope();
@@ -686,10 +687,10 @@ namespace MinAPI.Services.GdsBackgroundService
                 request.State = (int)CertificateRequestState.New;
                 request.CertificateGroupId = certificateGroupId;
                 request.CertificateTypeId = certificateTypeId;
-                request.SubjectName = null!;
-                request.DomainNames = null!;
-                request.PrivateKeyFormat = null!;
-                request.PrivateKeyPassword = null!;
+                request.SubjectName = null;
+                request.DomainNames = null;
+                request.PrivateKeyFormat = null;
+                request.PrivateKeyPassword = null;
                 request.CertificateSigningRequest = certificateRequest;
 
                 if (isNew)
@@ -741,7 +742,7 @@ namespace MinAPI.Services.GdsBackgroundService
                 request.DomainNames = JsonConvert.SerializeObject(domainNames);
                 request.PrivateKeyFormat = privateKeyFormat;
                 request.PrivateKeyPassword = privateKeyPassword;
-                request.CertificateSigningRequest = null!;
+                request.CertificateSigningRequest = null;
 
                 if (isNew)
                 {
@@ -773,8 +774,8 @@ namespace MinAPI.Services.GdsBackgroundService
                 {
                     request.State = (int)CertificateRequestState.Rejected;
                     // erase information which is ot required anymore
-                    request.CertificateSigningRequest = null!;
-                    request.PrivateKeyPassword = null!;
+                    request.CertificateSigningRequest = null;
+                    request.PrivateKeyPassword = null;
                 }
                 else
                 {
@@ -802,8 +803,8 @@ namespace MinAPI.Services.GdsBackgroundService
                 request.State = (int)CertificateRequestState.Accepted;
 
                 // erase information which is ot required anymore
-                request.CertificateSigningRequest = null!;
-                request.PrivateKeyPassword = null!;
+                request.CertificateSigningRequest = null;
+                request.PrivateKeyPassword = null;
 
             context.SaveChanges();
             
@@ -813,15 +814,15 @@ namespace MinAPI.Services.GdsBackgroundService
         public CertificateRequestState FinishRequest(
             NodeId applicationId,
             NodeId requestId,
-            out string certificateGroupId,
-            out string certificateTypeId,
-            out byte[] signedCertificate,
-            out byte[] privateKey)
+            out string? certificateGroupId,
+            out string? certificateTypeId,
+            out byte[]? signedCertificate,
+            out byte[]? privateKey)
         {
-            certificateGroupId = null!;
-            certificateTypeId = null!;
-            signedCertificate = null!;
-            privateKey = null!;
+            certificateGroupId = null;
+            certificateTypeId = null;
+            signedCertificate = null;
+            privateKey = null;
             Guid reqId = GetNodeIdGuid(requestId);
             Guid appId = GetNodeIdGuid(applicationId);
 
@@ -859,21 +860,21 @@ namespace MinAPI.Services.GdsBackgroundService
         public CertificateRequestState ReadRequest(
             NodeId applicationId,
             NodeId requestId,
-            out string certificateGroupId,
-            out string certificateTypeId,
-            out byte[] certificateRequest,
-            out string subjectName,
-            out string[] domainNames,
-            out string privateKeyFormat,
-            out string privateKeyPassword)
+            out string? certificateGroupId,
+            out string? certificateTypeId,
+            out byte[]? certificateRequest,
+            out string? subjectName,
+            out string[]? domainNames,
+            out string? privateKeyFormat,
+            out string? privateKeyPassword)
         {
-            certificateGroupId = null!;
-            certificateTypeId = null!;
-            certificateRequest = null!;
-            subjectName = null!;
-            domainNames = null!;
-            privateKeyFormat = null!;
-            privateKeyPassword = null!;
+            certificateGroupId = null;
+            certificateTypeId = null;
+            certificateRequest = null;
+            subjectName = null;
+            domainNames = null;
+            privateKeyFormat = null;
+            privateKeyPassword = null;
             Guid reqId = GetNodeIdGuid(requestId);
             Guid appId = GetNodeIdGuid(applicationId);
 

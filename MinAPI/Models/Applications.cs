@@ -19,8 +19,8 @@ namespace MinAPI.Models
         public int ApplicationType { get; set; }
         public string ProductUri { get; set; } = null!;
         public string ServerCapabilities { get; set; } = null!;
-        public byte[] Certificate { get; set; } = null!;
-        public byte[] HttpsCertificate { get; set; } = null!;
+        public byte[]? Certificate { get; set; }
+        public byte[]? HttpsCertificate { get; set; }
         public int? TrustListId { get; set; }
         public int? HttpsTrustListId { get; set; }
 

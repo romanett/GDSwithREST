@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Hosting.Server;
 using MinAPI.Data;
 using MinAPI.Services.GdsBackgroundService;
 using Microsoft.Extensions.DependencyInjection;
+using GDSwithREST.Services.GdsBackgroundService;
 
 
 #region webApplicationBuilder
 var builder = WebApplication.CreateBuilder(args);
 //Inject dependency for accessing the GDS and adding the Hosted Service running the GDS
+builder.Services.AddSingleton<IGdsDatabase, GdsDatabase>();
 builder.Services.AddSingleton<IGdsService, GdsService>();
 builder.Services.AddHostedService<GdsBackgroundService>();
 builder.Services.AddControllers();

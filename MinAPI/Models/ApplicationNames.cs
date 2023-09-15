@@ -8,7 +8,7 @@ namespace MinAPI.Models
         public int Id { get; set; }
         public int ApplicationId { get; set; }
         public string Locale { get; set; } = null!;
-        public string Text { get; set; } = null!;
+        public string? Text { get; set; }
 
         public Applications Application { get; set; } = null!;
     }
