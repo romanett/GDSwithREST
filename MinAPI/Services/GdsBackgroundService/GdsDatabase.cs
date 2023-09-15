@@ -6,7 +6,7 @@ using Opc.Ua.Gds.Server;
 using Opc.Ua.Gds.Server.Database;
 using System.Reflection;
 
-namespace MinAPI
+namespace MinAPI.Services.GdsBackgroundService
 {
     public class GdsDatabase : ApplicationsDatabaseBase, ICertificateRequest
     {
@@ -14,7 +14,7 @@ namespace MinAPI
 
         public GdsDatabase(IServiceScopeFactory serviceScopeFactory)
         {
-                _serviceScopeFactory = serviceScopeFactory;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
 

@@ -1,16 +1,16 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using MinAPI;
 using Opc.Ua.Configuration;
 using Opc.Ua;
 using Opc.Ua.Gds.Server;
 using Microsoft.AspNetCore.Hosting.Server;
 using MinAPI.Data;
+using MinAPI.Services.GdsBackgroundService;
 
 
 #region webApplicationBuilder
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHostedService<MyBackgroundService>();
+builder.Services.AddHostedService<GdsBackgroundService>();
 
 // Inject database dependency
 var conStrBuilder = new SqlConnectionStringBuilder(
@@ -28,5 +28,6 @@ var app = builder.Build();
 
 
 app.MapGet("/", () => "Hello World");
+app.MapGet("/Endpoints", (IGdsBackgroundService gds) => gds.GetEndpoints());
 app.Run();
 

@@ -3,15 +3,16 @@ using MinAPI.Data;
 using Opc.Ua;
 using Opc.Ua.Configuration;
 using Opc.Ua.Gds.Server;
+using System.Collections.ObjectModel;
 using static System.Formats.Asn1.AsnWriter;
 
-namespace MinAPI
+namespace MinAPI.Services.GdsBackgroundService
 {
-    public class MyBackgroundService : BackgroundService
+    public class GdsBackgroundService : BackgroundService, IGdsBackgroundService
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private ApplicationInstance? _application;
-        public MyBackgroundService(IServiceScopeFactory serviceScopeFactory)
+        public GdsBackgroundService(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
@@ -25,7 +26,7 @@ namespace MinAPI
                 ConfigSectionName = "Opc.Ua.GlobalDiscoveryServer"
             };
             // load the application configuration.
-            await _application.LoadApplicationConfiguration(false);
+            await _application.LoadApplicationConfiguration("Services/GdsBackgroundService/Opc.Ua.GlobalDiscoveryServer.Config.xml", false);
             // check the application certificate.
             await _application.CheckApplicationInstanceCertificate(false, 0);
 
@@ -51,6 +52,12 @@ namespace MinAPI
             _application?.Stop();
 
             await base.StopAsync(stoppingToken);
+        }
+        
+        public ReadOnlyCollection<EndpointDescription> GetEndpoints()
+        {
+            if(_application is null) return new EndpointDescriptionCollection().AsReadOnly<EndpointDescription>();
+            return _application.Server.GetEndpoints().AsReadOnly<EndpointDescription>();
         }
     }
 }
