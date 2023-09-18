@@ -26,13 +26,7 @@ namespace MinAPI.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            /*
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Integrated Security=true;Database=gdsdb;");
-            }
-            */
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,7 +38,9 @@ namespace MinAPI.Data
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.Locale).HasMaxLength(10);
+                entity.Property(e => e.Locale)
+                    .HasMaxLength(10)
+                    .IsRequired(false);
 
                 entity.Property(e => e.Text)
                     .IsRequired()
@@ -63,6 +59,10 @@ namespace MinAPI.Data
 
                 entity.HasIndex(e => e.TrustListId)
                     .HasDatabaseName("IX_FK_Applications_TrustListId");
+
+                entity.Property(e => e.HttpsTrustListId).IsRequired(false);
+
+                entity.Property(e => e.TrustListId).IsRequired(false);
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
@@ -100,7 +100,9 @@ namespace MinAPI.Data
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.AuthorityId).HasMaxLength(100);
+                entity.Property(e => e.AuthorityId)
+                    .HasMaxLength(100)
+                    .IsRequired(false);
 
                 entity.Property(e => e.CertificateGroupId)
                     .IsRequired()
@@ -126,7 +128,9 @@ namespace MinAPI.Data
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
-                entity.Property(e => e.AuthorityId).HasMaxLength(50);
+                entity.Property(e => e.AuthorityId)
+                    .HasMaxLength(50)
+                    .IsRequired(false);
 
                 entity.Property(e => e.Path)
                     .IsRequired()
