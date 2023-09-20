@@ -1,7 +1,9 @@
-﻿using GDSwithREST.Services.GdsBackgroundService;
+﻿using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Opc.Ua;
 using Opc.Ua.Configuration;
 using Opc.Ua.Gds.Server;
+using Opc.Ua.Gds.Server.Database;
+using System.Collections;
 using System.Collections.ObjectModel;
 
 namespace MinAPI.Services.GdsBackgroundService
@@ -9,41 +11,49 @@ namespace MinAPI.Services.GdsBackgroundService
     public class GdsService: IGdsService
     {
 
-        private ApplicationInstance? _application;
-        private readonly IGdsDatabase _database;
+        private ApplicationInstance? _applicationInstance;
+        private readonly IApplicationsDatabase _applications;
+        private readonly ICertificateRequest _certificateRequests;
+        private readonly ICertificateGroup _certificateGroup;
 
-        public GdsService(IGdsDatabase database)
+        public GdsService(IApplicationsDatabase applications, ICertificateGroup certificateGroup, ICertificateRequest certificateRequests)
         {
-            _database = database;
+            _applications = applications;
+            _certificateGroup = certificateGroup;
+            _certificateRequests = certificateRequests;
         }
 
         public async Task StartServer(CancellationToken stoppingToken)
         {
-            if (_application == null)
+            if (_applicationInstance == null)
             {
                 //Create OPC Server Application to host GDS
-                _application = new ApplicationInstance
+                _applicationInstance = new ApplicationInstance
                 {
                     ApplicationName = "Global Discovery Server",
                     ApplicationType = ApplicationType.Server,
                     ConfigSectionName = "Opc.Ua.GlobalDiscoveryServer"
                 };
                 // load the application configuration.
-                await _application.LoadApplicationConfiguration("Services/GdsBackgroundService/Opc.Ua.GlobalDiscoveryServer.Config.xml", false);
+                await _applicationInstance.LoadApplicationConfiguration("Services/GdsBackgroundService/Opc.Ua.GlobalDiscoveryServer.Config.xml", false);
                 // check the application certificate.
-                await _application.CheckApplicationInstanceCertificate(false, 0);
+                await _applicationInstance.CheckApplicationInstanceCertificate(false, 0);
 
-                _database.Initialize();
+                _applications.Initialize();
+                _certificateRequests.Initialize();
+                //await _certificateGroup.Init();
                 var gdsServer = new GlobalDiscoverySampleServer(
-                        _database,
-                        _database,
-                        new CertificateGroup()
+                        _applications,
+                        _certificateRequests,
+                        _certificateGroup
                        );
 
                 //start GDS
-                await _application.Start(gdsServer);
+                await _applicationInstance.Start(gdsServer);
 
-                var endpoints = _application.Server.GetEndpoints().Select(e => e.EndpointUrl).Distinct();
+                
+
+                var endpoints = _applicationInstance.Server.GetEndpoints().Select(e => e.EndpointUrl).Distinct();
 
                 foreach (var endpoint in endpoints)
                 {
@@ -54,12 +64,12 @@ namespace MinAPI.Services.GdsBackgroundService
 
         public void StopServer()
         {
-            _application?.Stop();
+            _applicationInstance?.Stop();
         }
-        public ReadOnlyCollection<EndpointDescription> GetEndpoints()
+        public IEnumerable<String> GetEndpointURLs()
         {
-            if (_application is null) return new EndpointDescriptionCollection().AsReadOnly<EndpointDescription>();
-            return _application.Server.GetEndpoints().AsReadOnly<EndpointDescription>();
+            if (_applicationInstance is null) return new List<String>();
+            return _applicationInstance.Server.GetEndpoints().Select(e => e.EndpointUrl).Distinct();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace MinAPI.Services.GdsBackgroundService
         /// returns the Endpoints of the OPC UA GDS Server
         /// </summary>
         /// <returns cref="EndpointDescriptionCollection"><<returns>
-        public ReadOnlyCollection<EndpointDescription> GetEndpoints();
+        public IEnumerable<String> GetEndpointURLs();
 
         public Task StartServer(CancellationToken stoppingToken);
 
