@@ -14,12 +14,12 @@ namespace MinAPI.Services.GdsBackgroundService
         private ApplicationInstance? _applicationInstance;
         private readonly IApplicationsDatabase _applications;
         private readonly ICertificateRequest _certificateRequests;
-        private readonly ICertificateGroup _certificateGroup;
+        private readonly ICertificateGroup _certificateGroups;
 
         public GdsService(IApplicationsDatabase applications, ICertificateGroup certificateGroup, ICertificateRequest certificateRequests)
         {
             _applications = applications;
-            _certificateGroup = certificateGroup;
+            _certificateGroups = certificateGroup;
             _certificateRequests = certificateRequests;
         }
 
@@ -45,13 +45,11 @@ namespace MinAPI.Services.GdsBackgroundService
                 var gdsServer = new GlobalDiscoverySampleServer(
                         _applications,
                         _certificateRequests,
-                        _certificateGroup
+                        _certificateGroups
                        );
 
                 //start GDS
                 await _applicationInstance.Start(gdsServer);
-
-                
 
                 var endpoints = _applicationInstance.Server.GetEndpoints().Select(e => e.EndpointUrl).Distinct();
 
