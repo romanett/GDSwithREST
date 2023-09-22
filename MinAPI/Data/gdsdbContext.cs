@@ -1,9 +1,9 @@
 ﻿using System;
+using GDSwithREST.Data.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using MinAPI.Models;
 
 namespace MinAPI.Data
 {

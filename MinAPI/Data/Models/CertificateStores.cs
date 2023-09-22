@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MinAPI.Models
+namespace GDSwithREST.Data.Models
 {
     public partial class CertificateStores
     {

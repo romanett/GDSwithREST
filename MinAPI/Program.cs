@@ -1,11 +1,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Opc.Ua.Configuration;
-using Opc.Ua;
-using Microsoft.AspNetCore.Hosting.Server;
 using MinAPI.Data;
 using MinAPI.Services.GdsBackgroundService;
-using Microsoft.Extensions.DependencyInjection;
 using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Opc.Ua.Gds.Server;
 using Opc.Ua.Gds.Server.Database;
