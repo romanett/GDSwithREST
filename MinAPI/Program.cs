@@ -22,18 +22,18 @@ builder.Services.AddSingleton<IGdsService, GdsService>();
 builder.Services.AddHostedService<GdsBackgroundService>();
 builder.Services.AddControllers();
 // Inject database dependency
-var conStrBuilder = new SqlConnectionStringBuilder(
-    builder.Configuration.GetConnectionString("Default"))
-{
-    Password = builder.Configuration["DbPassword"]
-};
-var connection = conStrBuilder.ConnectionString;
-builder.Services.AddDbContext<GdsdbContext>(options => options.UseSqlServer(connection));
+builder.Services.AddDbContext<GdsdbContext>(
+    options => options.UseSqlServer(
+        new SqlConnectionStringBuilder(
+                builder.Configuration.GetConnectionString("Default"))
+                {
+                Password = builder.Configuration["DbPassword"]
+                }.ConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
 #endregion
-
+//activate web API
 app.MapGet("/", (IGdsService gds) => gds.GetEndpointURLs());
 app.MapControllers();
 app.Run();

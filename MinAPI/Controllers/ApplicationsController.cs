@@ -21,7 +21,7 @@ namespace GDSwithREST.Controllers
             _context = context;
         }
 
-        // GET: api/Applications
+        // GET: /Applications
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Applications>>> GetApplications()
         {
@@ -32,7 +32,7 @@ namespace GDSwithREST.Controllers
             return await _context.Applications.ToListAsync();
         }
 
-        // GET: api/Applications/5
+        // GET: /Applications/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Applications>> GetApplications(int id)
         {
@@ -50,40 +50,9 @@ namespace GDSwithREST.Controllers
             return applications;
         }
 
-        // PUT: api/Applications/5
+        // POST: /Applications/register
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutApplications(int id, Applications applications)
-        {
-            if (id != applications.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(applications).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ApplicationsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Applications
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<ActionResult<Applications>> PostApplications(Applications applications)
         {
           if (_context.Applications == null)
@@ -96,8 +65,8 @@ namespace GDSwithREST.Controllers
             return CreatedAtAction("GetApplications", new { id = applications.Id }, applications);
         }
 
-        // DELETE: api/Applications/5
-        [HttpDelete("{id}")]
+        // DELETE: /Applications/5
+        [HttpDelete("{id}/unregister")]
         public async Task<IActionResult> DeleteApplications(int id)
         {
             if (_context.Applications == null)
