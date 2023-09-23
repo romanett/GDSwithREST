@@ -9,6 +9,9 @@ using static System.Net.Mime.MediaTypeNames;
 using System;
 using System.Security.Cryptography.Xml;
 using Opc.Ua;
+using GDSwithREST.Services.GdsBackgroundService.Databases;
+using Opc.Ua.Gds.Server;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GDSwithREST.Controllers
 {
@@ -18,11 +21,13 @@ namespace GDSwithREST.Controllers
     {
         private readonly GdsdbContext _context;
         private readonly IApplicationsDatabase _applicationsDatabase;
+        private readonly ICertificateGroupDb _certificatesDatabase;
 
-        public ApplicationsController(GdsdbContext context, IApplicationsDatabase applicationsDatabase)
+        public ApplicationsController(GdsdbContext context, IApplicationsDatabase applicationsDatabase, ICertificateGroupDb certificatesDatabase)
         {
             _context = context;
             _applicationsDatabase = applicationsDatabase;
+            _certificatesDatabase = certificatesDatabase;
         }
 
         // GET: /Applications
@@ -38,13 +43,13 @@ namespace GDSwithREST.Controllers
 
         // GET: /Applications/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Applications>> GetApplications(int id)
+        public ActionResult<Applications> GetApplications(Guid id)
         {
           if (_context.Applications == null)
-          {
-              return NotFound();
+            {
+                return NotFound();
           }
-            var applications = await _context.Applications.FindAsync(id);
+            var applications = _context.Applications.SingleOrDefault(x => x.ApplicationId == id);
 
             if (applications == null)
             {
@@ -56,8 +61,12 @@ namespace GDSwithREST.Controllers
 
         // POST: /Applications/register
         [HttpPost("register")]
-        public  async Task<ActionResult<Applications>> RegisterApplication(ApplicationRecordDataType application)
-        {            
+        public  ActionResult<Applications> RegisterApplication(ApplicationRecordDataType application)
+        {
+            if (_applicationsDatabase == null)
+            {
+                return Problem("Application Registration failed.");
+            }
             var nodeId = _applicationsDatabase.RegisterApplication(application);
             if (nodeId == null)
             {
@@ -68,26 +77,67 @@ namespace GDSwithREST.Controllers
             {
                 return Problem("Application Registration failed.");
             }
-            var applications = _context.Applications.Single(x => x.ApplicationId == applicationID);
+            var applications = _context.Applications.SingleOrDefault(x => x.ApplicationId == applicationID);
 
             if (applications == null)
             {
                 return Problem("Application Registration failed.");
             }
 
-            return CreatedAtAction("GetApplications", new { id = applications.Id }, applications);
+            return CreatedAtAction("GetApplications", new { id = applications.ApplicationId }, applications);
         }
 
         // DELETE: /Applications/5
         [HttpDelete("{id}/unregister")]
-        public async Task<IActionResult> DeleteApplications(int id)
+        public async Task<IActionResult> DeleteApplications(Guid id)
         {
-
-            if (_context.Applications == null)
+            if (_context.Applications == null || _applicationsDatabase == null)
             {
                 return NotFound();
             }
-            var applications = await _context.Applications.FindAsync(id);
+            try
+            {
+                byte[] certificate;
+                if (_applicationsDatabase.GetApplicationCertificate(id, nameof(Opc.Ua.ObjectTypeIds.ApplicationCertificateType), out certificate))
+                {
+                    if (certificate != null && certificate.Length > 0)
+                    {
+                            ICertificateGroup certificateGroup = new CertificateGroup();
+                                var x509 = new X509Certificate2(certificate);
+
+                                foreach (var certificateGroups in _certificatesDatabase.CertificateGroups)
+                                {
+                                    if (X509Utils.CompareDistinguishedName(certificateGroups.Certificate.Subject, x509.Issuer))
+                                    {
+                                        certificateGroup = certificateGroups;
+                                    }
+                                }
+
+                        if (certificateGroup != null)
+                            {
+                                try
+                                {
+                                    
+                                    await _certificatesDatabase.RevokeCertificateAsync(x509).ConfigureAwait(false);
+                                }
+                                catch (Exception)
+                                {
+                                    //failed to delete certificate
+                                }
+                            }
+                    }
+                }
+            }
+            catch
+            {
+                //failed to delete certificate
+            }
+            //ToDo Revoke Certificate
+            if (_context.Applications == null || _applicationsDatabase == null)
+            {
+                return NotFound();
+            }
+            var applications =  _context.Applications.SingleOrDefault(x => x.ApplicationId == id);
             if (applications == null)
             {
                 return NotFound();

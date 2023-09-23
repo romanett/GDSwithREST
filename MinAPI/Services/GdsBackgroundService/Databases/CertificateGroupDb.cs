@@ -7,7 +7,7 @@ using System.Text;
 
 namespace GDSwithREST.Services.GdsBackgroundService.Databases
 {
-    public class CertificateGroupDb: ICertificateGroup
+    public class CertificateGroupDb: ICertificateGroupDb
     {
         #pragma warning disable CS8604 // Possible null reference argument.
         #region Public Fields

@@ -11,7 +11,7 @@ using Opc.Ua.Gds.Server.Database;
 var builder = WebApplication.CreateBuilder(args);
 //Inject dependencies for the GDS
 builder.Services.AddSingleton<IApplicationsDatabase, ApplicationDb>();
-builder.Services.AddSingleton<ICertificateGroup, CertificateGroupDb>();
+builder.Services.AddSingleton<ICertificateGroupDb, CertificateGroupDb>();
 builder.Services.AddSingleton<ICertificateRequest, CertificateRequestDb>();
 builder.Services.AddSingleton<IGdsService, GdsService>();
 //Run GDS as hosted service in the background

@@ -1,8 +1,12 @@
 ﻿
 using GDSwithREST.Data.Models;
+using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MinAPI.Data;
+using Opc.Ua;
+using Opc.Ua.Gds.Server;
+using System.Security.Cryptography.X509Certificates;
 
 namespace GDSwithREST.Controllers
 {
@@ -10,91 +14,89 @@ namespace GDSwithREST.Controllers
     [ApiController]
     public class CertificateGroupsController : ControllerBase
     {
-        private readonly GdsdbContext _context;
+        private readonly ICertificateGroupDb _certificatesDatabase;
 
-        public CertificateGroupsController(GdsdbContext context)
+        public CertificateGroupsController(ICertificateGroupDb certificates)
         {
-            _context = context;
+            _certificatesDatabase = certificates;
         }
 
         // GET: /CertificateGroups
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Applications>>> GetCertificateGroups()
+        public ActionResult<IEnumerable<CertificateGroup>> GetCertificateGroups()
         {
-          if (_context.Applications == null)
-          {
-              return NotFound();
-          }
-            return await _context.Applications.ToListAsync();
+            return _certificatesDatabase.CertificateGroups;
         }
 
         // GET: /CertificateGroups/5/ca
         [HttpGet("{id}/ca")]
-        public async Task<ActionResult<Applications>> GetCertificateGroupCA(int id)
+        public ActionResult<X509Certificate2> GetCertificateGroupCA(Guid id)
         {
-          if (_context.Applications == null)
-          {
-              return NotFound();
-          }
-            var applications = await _context.Applications.FindAsync(id);
+            if (_certificatesDatabase == null)
+            {
+                return NotFound();
+            }
+            var certificateGroup = _certificatesDatabase.CertificateGroups.SingleOrDefault(x => x.Id == id);
 
-            if (applications == null)
+            if (certificateGroup == null)
             {
                 return NotFound();
             }
 
-            return applications;
+            return certificateGroup.Certificate;
         }
 
         // GET: /CertificateGroups/5/trustlist
         [HttpGet("{id}/trustlist")]
-        public async Task<ActionResult<Applications>> GetCertificateGroupTrustList(int id)
+        public ActionResult<TrustListState> GetCertificateGroupTrustList(Guid id)
         {
-            if (_context.Applications == null)
+            if (_certificatesDatabase == null)
             {
                 return NotFound();
             }
-            var applications = await _context.Applications.FindAsync(id);
+            var certificateGroup = _certificatesDatabase.CertificateGroups.SingleOrDefault(x => x.Id == id);
 
-            if (applications == null)
+            if (certificateGroup == null)
             {
                 return NotFound();
             }
 
-            return applications;
+            return certificateGroup.DefaultTrustList;
         }
 
         // POST: /CertificateGroup/5/ca
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id}/ca")]
-        public async Task<ActionResult<Applications>> PostCertificateGroupCA(int id, Applications applications)
+        public async Task<ActionResult<Applications>> PostCertificateGroupCA(Guid id, string subjectName)
         {
-          if (_context.Applications == null)
-          {
-              return Problem("Entity set 'GdsdbContext.Applications'  is null.");
-          }
-            _context.Applications.Add(applications);
-            await _context.SaveChangesAsync();
+            if (_certificatesDatabase == null)
+            {
+                return NotFound();
+            }
+            var certificateGroup = _certificatesDatabase.CertificateGroups.SingleOrDefault(x => x.Id == id);
+            if (certificateGroup == null)
+            {
+                return NotFound();
+            }
+            await certificateGroup.CreateCACertificateAsync(subjectName);
 
-            return CreatedAtAction("GetApplications", new { id = applications.Id }, applications);
+            return CreatedAtAction("GetApplications", new { id = certificateGroup.Id }, certificateGroup.Certificate);
         }
 
         // DELETE: /CertificateGroup/5/cert
         [HttpDelete("{id}/cert")]
-        public async Task<IActionResult> DeleteCertificateGroupCert(int id)
+        public async Task<IActionResult> DeleteCertificateGroupCert(Guid id, X509Certificate2 cert)
         {
-            if (_context.Applications == null)
+            if (_certificatesDatabase == null)
             {
                 return NotFound();
             }
-            var applications = await _context.Applications.FindAsync(id);
-            if (applications == null)
+            var certificateGroup = _certificatesDatabase.CertificateGroups.SingleOrDefault(x => x.Id == id);
+            if (certificateGroup == null)
             {
                 return NotFound();
             }
-
-            _context.Applications.Remove(applications);
-            await _context.SaveChangesAsync();
+            await certificateGroup.RevokeCertificateAsync(cert);
 
             return NoContent();
         }

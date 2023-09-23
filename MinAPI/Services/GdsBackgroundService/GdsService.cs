@@ -14,9 +14,9 @@ namespace MinAPI.Services.GdsBackgroundService
         private ApplicationInstance? _applicationInstance;
         private readonly IApplicationsDatabase _applications;
         private readonly ICertificateRequest _certificateRequests;
-        private readonly ICertificateGroup _certificateGroups;
+        private readonly ICertificateGroupDb _certificateGroups;
 
-        public GdsService(IApplicationsDatabase applications, ICertificateGroup certificateGroup, ICertificateRequest certificateRequests)
+        public GdsService(IApplicationsDatabase applications, ICertificateGroupDb certificateGroup, ICertificateRequest certificateRequests)
         {
             _applications = applications;
             _certificateGroups = certificateGroup;
