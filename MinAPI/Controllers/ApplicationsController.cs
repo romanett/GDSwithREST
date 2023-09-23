@@ -3,6 +3,12 @@ using GDSwithREST.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MinAPI.Data;
+using Opc.Ua.Gds;
+using Opc.Ua.Gds.Server.Database;
+using static System.Net.Mime.MediaTypeNames;
+using System;
+using System.Security.Cryptography.Xml;
+using Opc.Ua;
 
 namespace GDSwithREST.Controllers
 {
@@ -11,10 +17,12 @@ namespace GDSwithREST.Controllers
     public class ApplicationsController : ControllerBase
     {
         private readonly GdsdbContext _context;
+        private readonly IApplicationsDatabase _applicationsDatabase;
 
-        public ApplicationsController(GdsdbContext context)
+        public ApplicationsController(GdsdbContext context, IApplicationsDatabase applicationsDatabase)
         {
             _context = context;
+            _applicationsDatabase = applicationsDatabase;
         }
 
         // GET: /Applications
@@ -47,16 +55,25 @@ namespace GDSwithREST.Controllers
         }
 
         // POST: /Applications/register
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("register")]
-        public async Task<ActionResult<Applications>> PostApplications(Applications applications)
-        {
-          if (_context.Applications == null)
-          {
-              return Problem("Entity set 'GdsdbContext.Applications'  is null.");
-          }
-            _context.Applications.Add(applications);
-            await _context.SaveChangesAsync();
+        public  async Task<ActionResult<Applications>> RegisterApplication(ApplicationRecordDataType application)
+        {            
+            var nodeId = _applicationsDatabase.RegisterApplication(application);
+            if (nodeId == null)
+            {
+                return Problem("Application Registration failed.");
+            }
+            var applicationID = new Guid(nodeId.Identifier.ToString()!);
+            if (_context.Applications == null)
+            {
+                return Problem("Application Registration failed.");
+            }
+            var applications = _context.Applications.Single(x => x.ApplicationId == applicationID);
+
+            if (applications == null)
+            {
+                return Problem("Application Registration failed.");
+            }
 
             return CreatedAtAction("GetApplications", new { id = applications.Id }, applications);
         }
@@ -65,6 +82,7 @@ namespace GDSwithREST.Controllers
         [HttpDelete("{id}/unregister")]
         public async Task<IActionResult> DeleteApplications(int id)
         {
+
             if (_context.Applications == null)
             {
                 return NotFound();
@@ -74,16 +92,11 @@ namespace GDSwithREST.Controllers
             {
                 return NotFound();
             }
-
-            _context.Applications.Remove(applications);
-            await _context.SaveChangesAsync();
+            var nodeId = new NodeId(applications.ApplicationId);
+            _applicationsDatabase.UnregisterApplication(nodeId);
 
             return NoContent();
         }
 
-        private bool ApplicationsExists(int id)
-        {
-            return (_context.Applications?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
     }
 }

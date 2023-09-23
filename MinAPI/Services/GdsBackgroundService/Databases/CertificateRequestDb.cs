@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using GDSwithREST.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MinAPI.Data;
-using MinAPI.Models;
 using Newtonsoft.Json;
 using Opc.Ua;
 using Opc.Ua.Gds.Server;
