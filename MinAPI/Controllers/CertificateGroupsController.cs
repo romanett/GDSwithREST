@@ -67,7 +67,7 @@ namespace GDSwithREST.Controllers
         // POST: /CertificateGroup/5/ca
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id:Guid}/ca")]
-        public async Task<ActionResult<Applications>> PostCertificateGroupCA(Guid id, string subjectName)
+        public async Task<ActionResult<Applications>> PostCertificateGroupCA(Guid id, [FromBody] string subjectName)
         {
             if (_certificatesDatabase == null)
             {
@@ -85,7 +85,7 @@ namespace GDSwithREST.Controllers
 
         // DELETE: /CertificateGroup/5/cert
         [HttpDelete("{id:Guid}/cert")]
-        public async Task<IActionResult> DeleteCertificateGroupCert(Guid id, X509Certificate2 cert)
+        public async Task<IActionResult> DeleteCertificateGroupCert(Guid id, [FromBody] X509Certificate2 cert)
         {
             if (_certificatesDatabase == null)
             {

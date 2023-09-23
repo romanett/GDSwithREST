@@ -61,7 +61,7 @@ namespace GDSwithREST.Controllers
 
         // POST: /Applications/register
         [HttpPost("register")]
-        public async Task<ActionResult<Applications>> RegisterApplication(ApplicationRecordDataType application)
+        public async Task<ActionResult<Applications>> RegisterApplication([FromBody] ApplicationRecordDataType application)
         {
             if (_applicationsDatabase == null)
             {
