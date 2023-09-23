@@ -29,7 +29,7 @@ namespace GDSwithREST.Controllers
         }
 
         // GET: /CertificateGroups/5/ca
-        [HttpGet("{id}/ca")]
+        [HttpGet("{id:Guid}/ca")]
         public ActionResult<X509Certificate2> GetCertificateGroupCA(Guid id)
         {
             if (_certificatesDatabase == null)
@@ -47,7 +47,7 @@ namespace GDSwithREST.Controllers
         }
 
         // GET: /CertificateGroups/5/trustlist
-        [HttpGet("{id}/trustlist")]
+        [HttpGet("{id:Guid}/trustlist")]
         public ActionResult<TrustListState> GetCertificateGroupTrustList(Guid id)
         {
             if (_certificatesDatabase == null)
@@ -66,7 +66,7 @@ namespace GDSwithREST.Controllers
 
         // POST: /CertificateGroup/5/ca
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{id}/ca")]
+        [HttpPost("{id:Guid}/ca")]
         public async Task<ActionResult<Applications>> PostCertificateGroupCA(Guid id, string subjectName)
         {
             if (_certificatesDatabase == null)
@@ -84,7 +84,7 @@ namespace GDSwithREST.Controllers
         }
 
         // DELETE: /CertificateGroup/5/cert
-        [HttpDelete("{id}/cert")]
+        [HttpDelete("{id:Guid}/cert")]
         public async Task<IActionResult> DeleteCertificateGroupCert(Guid id, X509Certificate2 cert)
         {
             if (_certificatesDatabase == null)

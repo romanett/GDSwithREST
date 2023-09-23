@@ -42,14 +42,14 @@ namespace GDSwithREST.Controllers
         }
 
         // GET: /Applications/5
-        [HttpGet("{id}")]
-        public ActionResult<Applications> GetApplications(Guid id)
+        [HttpGet("{id:Guid}")]
+        public async Task<ActionResult<Applications>> GetApplications(Guid id)
         {
           if (_context.Applications == null)
             {
                 return NotFound();
           }
-            var applications = _context.Applications.SingleOrDefault(x => x.ApplicationId == id);
+            var applications = await _context.Applications.SingleOrDefaultAsync(x => x.ApplicationId == id);
 
             if (applications == null)
             {
@@ -61,7 +61,7 @@ namespace GDSwithREST.Controllers
 
         // POST: /Applications/register
         [HttpPost("register")]
-        public  ActionResult<Applications> RegisterApplication(ApplicationRecordDataType application)
+        public async Task<ActionResult<Applications>> RegisterApplication(ApplicationRecordDataType application)
         {
             if (_applicationsDatabase == null)
             {
@@ -77,7 +77,7 @@ namespace GDSwithREST.Controllers
             {
                 return Problem("Application Registration failed.");
             }
-            var applications = _context.Applications.SingleOrDefault(x => x.ApplicationId == applicationID);
+            var applications = await _context.Applications.SingleOrDefaultAsync(x => x.ApplicationId == applicationID);
 
             if (applications == null)
             {
@@ -88,7 +88,7 @@ namespace GDSwithREST.Controllers
         }
 
         // DELETE: /Applications/5
-        [HttpDelete("{id}/unregister")]
+        [HttpDelete("{id:Guid}/unregister")]
         public async Task<IActionResult> DeleteApplications(Guid id)
         {
             if (_context.Applications == null || _applicationsDatabase == null)
@@ -137,7 +137,7 @@ namespace GDSwithREST.Controllers
             {
                 return NotFound();
             }
-            var applications =  _context.Applications.SingleOrDefault(x => x.ApplicationId == id);
+            var applications =  await _context.Applications.SingleOrDefaultAsync(x => x.ApplicationId == id);
             if (applications == null)
             {
                 return NotFound();
