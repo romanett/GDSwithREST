@@ -1,18 +1,17 @@
 version: '3.4'
 
 services:
-  minapi:
-    image: ${DOCKER_REGISTRY-}minapi
+  gdswithrest:
+    image: ${DOCKER_REGISTRY-}gdswithrest
     build:
       context: .
-      dockerfile: MinAPI/Dockerfile
+      dockerfile: gdswithrest/Dockerfile
     ports:
         - "8080:80"
         - "8081:443"
         - "58810:58810"
     depends_on:
         - db
-#command: "ln -sf /dev/stdout /root/.local/share/OPC Foundation/GDS/Logs/GlobalDiscoveryServer.log.txt"
   db:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     ports:

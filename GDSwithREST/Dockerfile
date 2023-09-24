@@ -8,16 +8,16 @@ EXPOSE 58810
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["MinAPI/MinAPI.csproj", "MinAPI/"]
-RUN dotnet restore "MinAPI/MinAPI.csproj"
+COPY ["GDSwithREST/GDSwithREST.csproj", "GDSwithREST/"]
+RUN dotnet restore "GDSwithREST/GDSwithREST.csproj"
 COPY . .
-WORKDIR "/src/MinAPI"
-RUN dotnet build "MinAPI.csproj" -c Release -o /app/build
+WORKDIR "/src/GDSwithREST"
+RUN dotnet build "GDSwithREST.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "MinAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "GDSwithREST.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "MinAPI.dll"]
+ENTRYPOINT ["dotnet", "GDSwithREST.dll"]
