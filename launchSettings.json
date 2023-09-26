@@ -4,6 +4,15 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
+        "minapi": "StartDebugging",
+        "db": "StartWithoutDebugging"
+      }
+    },
+    "docker_compose2": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "db": "StartWithoutDebugging",
         "minapi": "StartDebugging"
       }
     }

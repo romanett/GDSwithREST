@@ -1,11 +1,11 @@
 version: '3.4'
 
 services:
-  gdswithrest:
+  minapi:
     image: ${DOCKER_REGISTRY-}gdswithrest
     build:
       context: .
-      dockerfile: gdswithrest/Dockerfile
+      dockerfile: GDSwithREST/Dockerfile
     ports:
         - "8080:80"
         - "8081:443"

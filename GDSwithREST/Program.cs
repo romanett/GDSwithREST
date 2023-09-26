@@ -26,15 +26,17 @@ builder.Services.AddDbContext<GdsdbContext>(
                 Password = builder.Configuration["DbPassword"]
                 }.ConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-//builder.Services.AddOpenApiDocument();
+builder.Services.AddOpenApiDocument();
 
 var app = builder.Build();
 #endregion
 //activate web API
+app.UseOpenApi();
+app.UseSwaggerUi3();
 app.MapGet("/", (IGdsService gds) => gds.GetEndpointURLs());
 app.MapControllers();
 
-//app.UseOpenAPI;
-//app.UseSwaggerUi3;
+app.UseDeveloperExceptionPage();
+
 app.Run();
 
