@@ -120,7 +120,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
 
         public override void UnregisterApplication(NodeId applicationId)
         {
-            Guid id = GetNodeIdGuid(applicationId);
+            Guid id = (Guid)applicationId.Identifier;
 
             List<byte[]> certificates = new();
 

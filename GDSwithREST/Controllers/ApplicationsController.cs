@@ -72,12 +72,14 @@ namespace GDSwithREST.Controllers
             {
                 return Problem("Application Registration failed.");
             }
+            var applicationName = new LocalizedTextCollection { 
+                                    new LocalizedText("en-US", applicationRaw.ApplicationName)};
             var application = new ApplicationRecordDataType()
             {
                 ApplicationId = applicationRaw.ApplicationId,
                 ApplicationUri = applicationRaw.ApplicationUri,
                 ApplicationType = (ApplicationType)applicationRaw.ApplicationType,
-                ApplicationNames = (LocalizedTextCollection)new LocalizedTextCollection().Append(new LocalizedText("en-US", applicationRaw.ApplicationName)),
+                ApplicationNames = applicationName,
                 ProductUri = applicationRaw.ProductUri
             };
             var nodeId = _applicationsDatabase.RegisterApplication(application);
