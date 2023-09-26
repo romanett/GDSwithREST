@@ -12,6 +12,7 @@ using Opc.Ua;
 using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Opc.Ua.Gds.Server;
 using System.Security.Cryptography.X509Certificates;
+using GDSwithREST.Data.Models.ApiModels;
 
 namespace GDSwithREST.Controllers
 {
@@ -32,41 +33,53 @@ namespace GDSwithREST.Controllers
 
         // GET: /Applications
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Applications>>> GetApplications()
+        public async Task<ActionResult<IEnumerable<ApplicationsApiModel>>> GetApplications()
         {
           if (_context.Applications == null)
           {
               return NotFound();
           }
-            return await _context.Applications.ToListAsync();
+          var applications = await _context.Applications.ToListAsync();
+            var applicationsAsApiModel =
+               from application in applications
+               select new ApplicationsApiModel(application);
+            return Ok(applicationsAsApiModel);
         }
 
         // GET: /Applications/5
         [HttpGet("{id:Guid}")]
-        public async Task<ActionResult<Applications>> GetApplications(Guid id)
+        public async Task<ActionResult<ApplicationsApiModel>> GetApplications(Guid id)
         {
-          if (_context.Applications == null)
+            if (_context.Applications == null)
             {
                 return NotFound();
-          }
-            var applications = await _context.Applications.SingleOrDefaultAsync(x => x.ApplicationId == id);
+            }
+            var application = await _context.Applications.SingleOrDefaultAsync(x => x.ApplicationId == id);
 
-            if (applications == null)
+            if (application == null)
             {
                 return NotFound();
             }
 
-            return applications;
+            return new ApplicationsApiModel(application);
         }
 
         // POST: /Applications/register
         [HttpPost("register")]
-        public async Task<ActionResult<Applications>> RegisterApplication([FromBody] ApplicationRecordDataType application)
+        public async Task<ActionResult<Applications>> RegisterApplication([FromBody] ApplicationsApiModel applicationRaw)
         {
             if (_applicationsDatabase == null)
             {
                 return Problem("Application Registration failed.");
             }
+            var application = new ApplicationRecordDataType()
+            {
+                ApplicationId = applicationRaw.ApplicationId,
+                ApplicationUri = applicationRaw.ApplicationUri,
+                ApplicationType = (ApplicationType)applicationRaw.ApplicationType,
+                ApplicationNames = (LocalizedTextCollection)new LocalizedTextCollection().Append(new LocalizedText("en-US", applicationRaw.ApplicationName)),
+                ProductUri = applicationRaw.ProductUri
+            };
             var nodeId = _applicationsDatabase.RegisterApplication(application);
             if (nodeId == null)
             {
@@ -84,7 +97,7 @@ namespace GDSwithREST.Controllers
                 return Problem("Application Registration failed.");
             }
 
-            return CreatedAtAction("GetApplications", new { id = applications.ApplicationId }, applications);
+            return CreatedAtAction("GetApplications", new { id = applications.ApplicationId }, new ApplicationsApiModel(applications));
         }
 
         // DELETE: /Applications/5

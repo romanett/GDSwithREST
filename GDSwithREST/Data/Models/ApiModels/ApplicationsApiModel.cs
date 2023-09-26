@@ -9,5 +9,22 @@
         public string ProductUri { get; set; } = null!;
 
         //Certificate?
+        public ApplicationsApiModel(Applications application)
+        {
+            ApplicationId = application.ApplicationId;
+            ApplicationUri = application.ApplicationUri;
+            ApplicationName = application.ApplicationName;
+            ProductUri = application.ProductUri;
+            ApplicationType = application.ApplicationType;
+        }
+
+        public ApplicationsApiModel(Guid applicationId, string applicationUri, string applicationName, int applicationType, string productUri)
+        {
+            ApplicationId = applicationId;
+            ApplicationUri = applicationUri;
+            ApplicationName = applicationName;
+            ApplicationType = applicationType;
+            ProductUri = productUri;
+        }
     }
 }

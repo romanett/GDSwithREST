@@ -1,5 +1,6 @@
 ﻿
 using GDSwithREST.Data.Models;
+using GDSwithREST.Data.Models.ApiModels;
 using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,10 @@ namespace GDSwithREST.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<CertificateGroup>> GetCertificateGroups()
         {
-            return _certificatesDatabase.CertificateGroups;
+            var certificateGroups =
+                from certificateGroup in _certificatesDatabase.CertificateGroups
+                select new CertificateGroupApiModel(certificateGroup);
+            return Ok(certificateGroups);
         }
 
         // GET: /CertificateGroups/5/ca
