@@ -33,7 +33,7 @@ namespace GDSwithREST.Controllers
         }
         
         // GET: /CertificateGroups/5/ca
-        [HttpGet("{id:Guid}/ca")]
+        [HttpGet("{id:int}/ca")]
         public ActionResult<X509CertificateApiModel> GetCertificateGroupCA(uint id)
         {
             if (_certificatesDatabase == null)
@@ -49,10 +49,10 @@ namespace GDSwithREST.Controllers
 
             return new X509CertificateApiModel(certificateGroup.Certificate);
         }
-        /*
+        
         // GET: /CertificateGroups/5/trustlist
-        [HttpGet("{id:Guid}/trustlist")]
-        public ActionResult<TrustListState> GetCertificateGroupTrustList(uint id)
+        [HttpGet("{id:int}/trustlist")]
+        public async Task<ActionResult<IEnumerable<X509CertificateApiModel>>> GetCertificateGroupTrustList(uint id)
         {
             if (_certificatesDatabase == null)
             {
@@ -64,13 +64,16 @@ namespace GDSwithREST.Controllers
             {
                 return NotFound();
             }
-
-            return certificateGroup.DefaultTrustList;
+            var trustedCertificatesCollection = await _certificatesDatabase.GetTrustList(certificateGroup);
+            var trustList =
+                from cert in trustedCertificatesCollection
+                select new X509CertificateApiModel(cert);
+            return  Ok(trustList);
         }
-
+        
         // POST: /CertificateGroup/5/ca
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{id:Guid}/ca")]
+        [HttpPost("{id:int}/ca")]
         public async Task<ActionResult<Applications>> PostCertificateGroupCA(uint id, [FromBody] string subjectName)
         {
             if (_certificatesDatabase == null)
@@ -84,11 +87,11 @@ namespace GDSwithREST.Controllers
             }
             await certificateGroup.CreateCACertificateAsync(subjectName);
 
-            return CreatedAtAction("GetApplications", new { id = certificateGroup.Id.Identifier }, certificateGroup.Certificate);
+            return CreatedAtAction("RecreatedCA", new { id = certificateGroup.Id.Identifier }, new X509CertificateApiModel( certificateGroup.Certificate));
         }
-
+        /*
         // DELETE: /CertificateGroup/5/cert
-        [HttpDelete("{id:Guid}/cert")]
+        [HttpDelete("{id:int}/cert")]
         public async Task<IActionResult> RevokeCertificateGroupCert(uint id, [FromBody] X509Certificate2 cert)
         {
             if (_certificatesDatabase == null)
