@@ -6,7 +6,6 @@ namespace GDSwithREST.Data.Models.ApiModels
     public class X509CertificateApiModel
     {
         public string Subject { get; set; }
-
         public string Thumbprint { get; set; }
 
         public string SerialNumber { get; set; }

@@ -8,6 +8,7 @@ using MinAPI.Data;
 using Opc.Ua;
 using Opc.Ua.Gds.Server;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json;
 
 namespace GDSwithREST.Controllers
 {
@@ -74,8 +75,9 @@ namespace GDSwithREST.Controllers
         // POST: /CertificateGroup/5/ca
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id:int}/ca")]
-        public async Task<ActionResult<Applications>> PostCertificateGroupCA(uint id, [FromBody] string subjectName)
+        public async Task<ActionResult<Applications>> PostCertificateGroupCA(uint id, [FromBody] JsonElement subjectNameRaw)
         {
+            var subjectName = subjectNameRaw.GetRawText();
             if (_certificatesDatabase == null)
             {
                 return NotFound();
@@ -89,11 +91,12 @@ namespace GDSwithREST.Controllers
 
             return CreatedAtAction("RecreatedCA", new { id = certificateGroup.Id.Identifier }, new X509CertificateApiModel( certificateGroup.Certificate));
         }
-        /*
+        
         // DELETE: /CertificateGroup/5/cert
         [HttpDelete("{id:int}/cert")]
-        public async Task<IActionResult> RevokeCertificateGroupCert(uint id, [FromBody] X509Certificate2 cert)
+        public async Task<IActionResult> RevokeCertificateGroupCert(uint id, [FromBody] JsonElement certPemRaw)
         {
+            var certPem = certPemRaw.GetRawText();
             if (_certificatesDatabase == null)
             {
                 return NotFound();
@@ -103,10 +106,9 @@ namespace GDSwithREST.Controllers
             {
                 return NotFound();
             }
-            await certificateGroup.RevokeCertificateAsync(cert);
+            await certificateGroup.RevokeCertificateAsync(X509Certificate2.CreateFromPem(certPem));
 
             return NoContent();
         }
-        */
     }
 }
