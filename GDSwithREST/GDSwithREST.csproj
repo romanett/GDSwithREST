@@ -10,19 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\CertificateGroupsController.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Services\GdsBackgroundService\Opc.Ua.GlobalDiscoveryServer.Config.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Services\GdsBackgroundService\Opc.Ua.GlobalDiscoveryServer.Config.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Controllers\CertificateGroupsController.cs" />
   </ItemGroup>
 
   <ItemGroup>

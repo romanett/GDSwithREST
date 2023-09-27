@@ -10,27 +10,32 @@ namespace GDSwithREST.Data.Models.ApiModels
     {
         public CertificateGroupApiModel(CertificateGroup certificateGroup)
         {
-            Id = certificateGroup.Id;
-            CertificateType = certificateGroup.CertificateType;
-            Certificate = certificateGroup.Certificate;
-            DefaultTrustList = certificateGroup.DefaultTrustList;
-            UpdateRequired = certificateGroup.UpdateRequired;
+            try
+            {
+                Id = (uint)certificateGroup.Id.Identifier;
+                UpdateRequired = certificateGroup.UpdateRequired;
+                Ceritificate = new X509CertificateApiModel(certificateGroup.Certificate);
+            }
+            catch
+            {
+            }
         }
-        public CertificateGroupApiModel(NodeId? id, NodeId? certificateType, X509Certificate2? certificate, TrustListState? defaultTrustList, bool updateRequired)
+        public CertificateGroupApiModel(uint id, X509Certificate2 certificate, bool updateRequired)
         {
-            Id = id;
-            CertificateType = certificateType;
-            Certificate = certificate;
-            DefaultTrustList = defaultTrustList;
-            UpdateRequired = updateRequired;
+            try
+            {
+                Id = id;
+                UpdateRequired = updateRequired;
+                Ceritificate = new X509CertificateApiModel(certificate);
+            }
+            catch
+            {
+            }
         }
 
-        NodeId? Id { get; set; }
-        NodeId? CertificateType { get; set; }
-        X509Certificate2? Certificate { get; set; }
-        TrustListState? DefaultTrustList { get; set; }
-        bool UpdateRequired { get; set; }
-
-        //configuration to get TrustList
+        public uint Id { get; set; }
+        public bool UpdateRequired { get; set; }
+        public X509CertificateApiModel? Ceritificate { get; set; }
+        
     }
 }
