@@ -19,7 +19,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
         public void Initialize()
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             context.Database.Migrate();
         }
         public ushort NamespaceIndex { get; set; }
@@ -34,7 +34,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             Guid id = GetNodeIdGuid(applicationId);
 
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var application = (from x in context.Applications where x.ApplicationId == id select x).SingleOrDefault();
 
             if (application == null)
@@ -85,7 +85,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             Guid id = GetNodeIdGuid(applicationId);
 
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var application = (from x in context.Applications where x.ApplicationId == id select x).SingleOrDefault();
 
             if (application == null)
@@ -130,7 +130,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
         {
             Guid id = GetNodeIdGuid(requestId);
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var request = (from x in context.CertificateRequests where x.RequestId == id select x).SingleOrDefault();
 
             if (request == null)
@@ -160,7 +160,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
         {
             Guid id = GetNodeIdGuid(requestId);
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var request = (from x in context.CertificateRequests where x.RequestId == id select x).SingleOrDefault();
 
             if (request == null)
@@ -195,7 +195,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             Guid appId = GetNodeIdGuid(applicationId);
 
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var request = (from x in context.CertificateRequests where x.RequestId == reqId select x).SingleOrDefault();
 
             if (request == null)
@@ -247,7 +247,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             Guid appId = GetNodeIdGuid(applicationId);
 
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var request = (from x in context.CertificateRequests where x.RequestId == reqId select x).SingleOrDefault();
 
             if (request == null)

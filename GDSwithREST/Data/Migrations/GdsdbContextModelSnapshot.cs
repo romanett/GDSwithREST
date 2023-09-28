@@ -10,7 +10,7 @@ using GDSwithREST.Data;
 
 namespace GDSwithREST.Migrations
 {
-    [DbContext(typeof(GdsdbContext))]
+    [DbContext(typeof(GdsDbContext))]
     partial class GdsdbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

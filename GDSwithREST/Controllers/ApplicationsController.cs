@@ -17,11 +17,11 @@ namespace GDSwithREST.Controllers
     [ApiController]
     public class ApplicationsController : ControllerBase
     {
-        private readonly GdsdbContext _context;
+        private readonly GdsDbContext _context;
         private readonly IApplicationsDatabase _applicationsDatabase;
         private readonly ICertificateGroupDb _certificatesDatabase;
 
-        public ApplicationsController(GdsdbContext context, IApplicationsDatabase applicationsDatabase, ICertificateGroupDb certificatesDatabase)
+        public ApplicationsController(GdsDbContext context, IApplicationsDatabase applicationsDatabase, ICertificateGroupDb certificatesDatabase)
         {
             _context = context;
             _applicationsDatabase = applicationsDatabase;

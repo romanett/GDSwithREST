@@ -22,7 +22,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
         public override void Initialize()
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             context.Database.Migrate();
         }
 
@@ -38,7 +38,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             Guid applicationId = GetNodeIdGuid(appNodeId);
             string capabilities = ServerCapabilities(application);
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             Applications? record = null;
 
             if (applicationId != Guid.Empty)
@@ -123,7 +123,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
 
 
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
 
             var result = (from ii in context.Applications
                           where ii.ApplicationId == id
@@ -162,7 +162,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             Guid id = GetNodeIdGuid(applicationId);
 
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
 
             var results = from x in context.Applications
                           where x.ApplicationId == id
@@ -225,7 +225,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
                 )
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var results = from x in context.Applications
                           where x.ApplicationUri == applicationUri
                           select x;
@@ -294,7 +294,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             lastCounterResetTime = m_lastCounterResetTime;
 
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var results = from x in context.Applications
                           where (int)startingRecordId == 0 || (int)startingRecordId <= x.Id
                           orderby x.Id
@@ -424,7 +424,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             lastCounterResetTime = m_lastCounterResetTime;
 
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var results = from x in context.ServerEndpoints
                           join y in context.Applications on x.ApplicationId equals y.Id
                           where (int)startingRecordId == 0 || (int)startingRecordId <= x.Id
@@ -538,7 +538,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             }
 
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var results = from x in context.Applications
                           where x.ApplicationId == id
                           select x;
@@ -582,7 +582,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             }
 
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var result = (from ii in context.Applications
                           where ii.ApplicationId == id
                           select ii).SingleOrDefault();
@@ -614,7 +614,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
         {
             Guid id = GetNodeIdGuid(applicationId);
             using var scope = _serviceScopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<GdsdbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<GdsDbContext>();
             var result = (from x in context.Applications where x.ApplicationId == id select x).SingleOrDefault();
 
             if (result == null)

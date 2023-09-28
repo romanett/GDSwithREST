@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GDSwithREST.Data
 {
-    public partial class GdsdbContext : DbContext
+    public partial class GdsDbContext : DbContext
     {
-        public GdsdbContext()
+        public GdsDbContext()
         {
         }
 
-        public GdsdbContext(DbContextOptions<GdsdbContext> options)
+        public GdsDbContext(DbContextOptions<GdsDbContext> options)
             : base(options)
         {
         }

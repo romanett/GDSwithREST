@@ -11,7 +11,7 @@ using GDSwithREST.Data;
 
 namespace GDSwithREST.Migrations
 {
-    [DbContext(typeof(GdsdbContext))]
+    [DbContext(typeof(GdsDbContext))]
     [Migration("20230915212040_FixNullables")]
     partial class FixNullables
     {

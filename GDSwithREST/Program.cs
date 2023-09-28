@@ -18,7 +18,7 @@ builder.Services.AddSingleton<IGdsService, GdsService>();
 builder.Services.AddHostedService<GdsBackgroundService>();
 builder.Services.AddControllers();
 // Inject database dependency
-builder.Services.AddDbContext<GdsdbContext>(
+builder.Services.AddDbContext<GdsDbContext>(
     options => options.UseSqlServer(
         new SqlConnectionStringBuilder(
                 builder.Configuration.GetConnectionString("Default"))
