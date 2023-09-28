@@ -3,10 +3,8 @@ using Opc.Ua;
 using Opc.Ua.Configuration;
 using Opc.Ua.Gds.Server;
 using Opc.Ua.Gds.Server.Database;
-using System.Collections;
-using System.Collections.ObjectModel;
 
-namespace MinAPI.Services.GdsBackgroundService
+namespace GDSwithREST.Services.GdsBackgroundService
 {
     public class GdsService: IGdsService
     {

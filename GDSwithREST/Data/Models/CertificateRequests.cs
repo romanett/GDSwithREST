@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GDSwithREST.Data.Models
+﻿namespace GDSwithREST.Data.Models
 {
     public partial class CertificateRequests
     {

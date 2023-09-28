@@ -1,7 +1,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using MinAPI.Data;
-using MinAPI.Services.GdsBackgroundService;
+using GDSwithREST.Data;
+using GDSwithREST.Services.GdsBackgroundService;
 using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Opc.Ua.Gds.Server;
 using Opc.Ua.Gds.Server.Database;
@@ -32,11 +32,15 @@ var app = builder.Build();
 #endregion
 //activate web API
 app.UseOpenApi();
-app.UseSwaggerUi3();
-app.MapGet("/", (IGdsService gds) => gds.GetEndpointURLs());
-app.MapControllers();
 
+//GET: /swagger
+app.UseSwaggerUi3();
+
+app.MapControllers();
 app.UseDeveloperExceptionPage();
+
+//GET: /
+app.MapGet("/", (IGdsService gds) => gds.GetEndpointURLs());
 
 app.Run();
 

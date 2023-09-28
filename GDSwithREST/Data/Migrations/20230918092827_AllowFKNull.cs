@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace MinAPI.Migrations
+namespace GDSwithREST.Migrations
 {
     /// <inheritdoc />
     public partial class AllowFKNull : Migration

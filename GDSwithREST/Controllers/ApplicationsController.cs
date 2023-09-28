@@ -2,12 +2,9 @@
 using GDSwithREST.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MinAPI.Data;
+using GDSwithREST.Data;
 using Opc.Ua.Gds;
 using Opc.Ua.Gds.Server.Database;
-using static System.Net.Mime.MediaTypeNames;
-using System;
-using System.Security.Cryptography.Xml;
 using Opc.Ua;
 using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Opc.Ua.Gds.Server;
@@ -33,7 +30,7 @@ namespace GDSwithREST.Controllers
 
         // GET: /Applications
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ApplicationsApiModel>>> GetApplications()
+        public async Task<ActionResult<IEnumerable<ApplicationApiModel>>> GetApplications()
         {
           if (_context.Applications == null)
           {
@@ -42,13 +39,13 @@ namespace GDSwithREST.Controllers
           var applications = await _context.Applications.ToListAsync();
             var applicationsAsApiModel =
                from application in applications
-               select new ApplicationsApiModel(application);
+               select new ApplicationApiModel(application);
             return Ok(applicationsAsApiModel);
         }
 
         // GET: /Applications/5
         [HttpGet("{id:Guid}")]
-        public async Task<ActionResult<ApplicationsApiModel>> GetApplications(Guid id)
+        public async Task<ActionResult<ApplicationApiModel>> GetApplications(Guid id)
         {
             if (_context.Applications == null)
             {
@@ -61,12 +58,12 @@ namespace GDSwithREST.Controllers
                 return NotFound();
             }
 
-            return new ApplicationsApiModel(application);
+            return new ApplicationApiModel(application);
         }
 
         // POST: /Applications/register
         [HttpPost("register")]
-        public async Task<ActionResult<Applications>> RegisterApplication([FromBody] ApplicationsApiModel applicationRaw)
+        public async Task<ActionResult<Applications>> RegisterApplication([FromBody] ApplicationApiModel applicationRaw)
         {
             if (_applicationsDatabase == null)
             {
@@ -99,7 +96,7 @@ namespace GDSwithREST.Controllers
                 return Problem("Application Registration failed.");
             }
 
-            return CreatedAtAction("GetApplications", new { id = applications.ApplicationId }, new ApplicationsApiModel(applications));
+            return CreatedAtAction("GetApplications", new { id = applications.ApplicationId }, new ApplicationApiModel(applications));
         }
 
         // DELETE: /Applications/5

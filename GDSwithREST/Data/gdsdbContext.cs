@@ -1,11 +1,7 @@
-﻿using System;
-using GDSwithREST.Data.Models;
-using Microsoft.Data.SqlClient;
+﻿using GDSwithREST.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace MinAPI.Data
+namespace GDSwithREST.Data
 {
     public partial class GdsdbContext : DbContext
     {

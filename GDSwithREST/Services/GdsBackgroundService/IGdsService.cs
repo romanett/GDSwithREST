@@ -1,7 +1,6 @@
 ﻿using Opc.Ua;
-using System.Collections.ObjectModel;
 
-namespace MinAPI.Services.GdsBackgroundService
+namespace GDSwithREST.Services.GdsBackgroundService
 {
     public interface IGdsService
     {

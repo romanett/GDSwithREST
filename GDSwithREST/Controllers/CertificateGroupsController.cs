@@ -3,10 +3,6 @@ using GDSwithREST.Data.Models;
 using GDSwithREST.Data.Models.ApiModels;
 using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MinAPI.Data;
-using Opc.Ua;
-using Opc.Ua.Gds.Server;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 

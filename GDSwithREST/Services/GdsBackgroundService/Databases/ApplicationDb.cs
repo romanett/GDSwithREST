@@ -1,12 +1,9 @@
 ﻿using GDSwithREST.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using MinAPI.Data;
-using Newtonsoft.Json;
+using GDSwithREST.Data;
 using Opc.Ua;
 using Opc.Ua.Gds;
-using Opc.Ua.Gds.Server;
 using Opc.Ua.Gds.Server.Database;
-using System.Reflection;
 
 namespace GDSwithREST.Services.GdsBackgroundService.Databases
 {

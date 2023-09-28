@@ -2,7 +2,7 @@
 
 namespace GDSwithREST.Data.Models.ApiModels
 {
-    public class ApplicationsApiModel
+    public class ApplicationApiModel
     {
         public Guid ApplicationId { get; set; }
         public string ApplicationUri { get; set; } = null!;
@@ -11,7 +11,7 @@ namespace GDSwithREST.Data.Models.ApiModels
         public string ProductUri { get; set; } = null!;
 
         //Certificate?
-        public ApplicationsApiModel(Applications application)
+        public ApplicationApiModel(Applications application)
         {
             ApplicationId = application.ApplicationId;
             ApplicationUri = application.ApplicationUri;
@@ -20,7 +20,7 @@ namespace GDSwithREST.Data.Models.ApiModels
             ApplicationType = application.ApplicationType;
         }
         [JsonConstructor]
-        public ApplicationsApiModel(Guid applicationId, string applicationUri, string applicationName, int applicationType, string productUri)
+        public ApplicationApiModel(Guid applicationId, string applicationUri, string applicationName, int applicationType, string productUri)
         {
             ApplicationId = applicationId;
             ApplicationUri = applicationUri;

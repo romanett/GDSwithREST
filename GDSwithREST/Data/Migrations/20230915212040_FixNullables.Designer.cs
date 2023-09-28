@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using MinAPI.Data;
+using GDSwithREST.Data;
 
 #nullable disable
 
-namespace MinAPI.Migrations
+namespace GDSwithREST.Migrations
 {
     [DbContext(typeof(GdsdbContext))]
     [Migration("20230915212040_FixNullables")]

@@ -1,12 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using MinAPI.Data;
-using Opc.Ua;
-using Opc.Ua.Configuration;
-using Opc.Ua.Gds.Server;
-using System.Collections.ObjectModel;
-using static System.Formats.Asn1.AsnWriter;
-
-namespace MinAPI.Services.GdsBackgroundService
+﻿namespace GDSwithREST.Services.GdsBackgroundService
 {
     public class GdsBackgroundService : BackgroundService
     {
