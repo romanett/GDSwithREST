@@ -20,14 +20,22 @@ namespace GDSwithREST.Controllers
         private readonly GdsDbContext _context;
         private readonly IApplicationsDatabase _applicationsDatabase;
         private readonly ICertificateGroupDb _certificatesDatabase;
-
+        /// <summary>
+        /// Controller for all Endpoints having to do with registered OPC UA Applications of the GDS
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="applicationsDatabase"></param>
+        /// <param name="certificatesDatabase"></param>
         public ApplicationsController(GdsDbContext context, IApplicationsDatabase applicationsDatabase, ICertificateGroupDb certificatesDatabase)
         {
             _context = context;
             _applicationsDatabase = applicationsDatabase;
             _certificatesDatabase = certificatesDatabase;
         }
-
+        /// <summary>
+        /// Returns all registered applications
+        /// </summary>
+        /// <returns></returns>
         // GET: /Applications
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ApplicationApiModel>>> GetApplications()
@@ -42,7 +50,11 @@ namespace GDSwithREST.Controllers
                select new ApplicationApiModel(application);
             return Ok(applicationsAsApiModel);
         }
-
+        /// <summary>
+        /// Returns the specified Application
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: /Applications/5
         [HttpGet("{id:Guid}")]
         public async Task<ActionResult<ApplicationApiModel>> GetApplications(Guid id)
@@ -60,7 +72,11 @@ namespace GDSwithREST.Controllers
 
             return new ApplicationApiModel(application);
         }
-
+        /// <summary>
+        /// Register a new Application at the GDS
+        /// </summary>
+        /// <param name="applicationRaw"></param>
+        /// <returns></returns>
         // POST: /Applications/register
         [HttpPost("register")]
         public async Task<ActionResult<Applications>> RegisterApplication([FromBody] ApplicationApiModel applicationRaw)
@@ -98,7 +114,11 @@ namespace GDSwithREST.Controllers
 
             return CreatedAtAction("GetApplications", new { id = applications.ApplicationId }, new ApplicationApiModel(applications));
         }
-
+        /// <summary>
+        /// unregister an exisiting Application from the OPC UA GDS
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // DELETE: /Applications/5
         [HttpDelete("{id:Guid}/unregister")]
         public async Task<IActionResult> DeleteApplications(Guid id)

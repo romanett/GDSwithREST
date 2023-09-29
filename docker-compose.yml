@@ -7,8 +7,8 @@ services:
       context: .
       dockerfile: GDSwithREST/Dockerfile
     ports:
-        - "8080:80"
-        - "8081:443"
+        - "8080:8080"
+        - "8081:8081"
         - "58810:58810"
     depends_on:
         - db

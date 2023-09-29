@@ -18,7 +18,10 @@ namespace GDSwithREST.Controllers
         {
             _certificatesDatabase = certificates;
         }
-
+        /// <summary>
+        /// Returns all Certificate Groups of the GDS
+        /// </summary>
+        /// <returns></returns>
         // GET: /CertificateGroups
         [HttpGet]
         public ActionResult<IEnumerable<CertificateGroupApiModel>> GetCertificateGroups()
@@ -28,7 +31,11 @@ namespace GDSwithREST.Controllers
                 select new CertificateGroupApiModel(certificateGroup);
             return Ok(certificateGroups);
         }
-        
+        /// <summary>
+        /// Returns the CA Certificate of the specified Certificate Group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: /CertificateGroups/5/ca
         [HttpGet("{id:int}/ca")]
         public ActionResult<X509CertificateApiModel> GetCertificateGroupCA(uint id)
@@ -46,7 +53,11 @@ namespace GDSwithREST.Controllers
 
             return new X509CertificateApiModel(certificateGroup.Certificate);
         }
-        
+        /// <summary>
+        /// Returns the TrustList of the specified certificate Group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         // GET: /CertificateGroups/5/trustlist
         [HttpGet("{id:int}/trustlist")]
         public async Task<ActionResult<IEnumerable<X509CertificateApiModel>>> GetCertificateGroupTrustList(uint id)
@@ -67,7 +78,12 @@ namespace GDSwithREST.Controllers
                 select new X509CertificateApiModel(cert);
             return  Ok(trustList);
         }
-        
+        /// <summary>
+        /// Regenerate the CA Certificate of the specified Certificate Group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="subjectNameRaw"></param>
+        /// <returns></returns>
         // POST: /CertificateGroup/5/ca
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id:int}/ca")]
@@ -87,9 +103,14 @@ namespace GDSwithREST.Controllers
 
             return CreatedAtAction("RecreatedCA", new { id = certificateGroup.Id.Identifier }, new X509CertificateApiModel( certificateGroup.Certificate));
         }
-        
+        /// <summary>
+        /// revoke the specified Certifice in the specified Certificate Group
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="certPemRaw"></param>
+        /// <returns></returns>
         // DELETE: /CertificateGroup/5/cert
-        [HttpDelete("{id:int}/cert")]
+        [HttpDelete("{id:int}/cert/revoke")]
         public async Task<IActionResult> RevokeCertificateGroupCert(uint id, [FromBody] JsonElement certPemRaw)
         {
             var certPem = certPemRaw.GetRawText();

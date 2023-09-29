@@ -5,6 +5,7 @@ using GDSwithREST.Services.GdsBackgroundService;
 using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Opc.Ua.Gds.Server;
 using Opc.Ua.Gds.Server.Database;
+using NSwag.Generation.AspNetCore;
 
 
 #region webApplicationBuilder
@@ -25,22 +26,37 @@ builder.Services.AddDbContext<GdsDbContext>(
                 {
                 Password = builder.Configuration["DbPassword"]
                 }.ConnectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddOpenApiDocument();
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+}
+//Enable OpenApiDocumenation
+builder.Services.AddOpenApiDocument(options =>
+{ 
+    options.Title = "GDSwithREST API";
+    options.DocumentName = "GDSwithREST API"; 
+}) ;
 
 var app = builder.Build();
 #endregion
-//activate web API
+if (!app.Environment.IsDevelopment())
+{
+    //enforce https
+    app.UseHsts();
+}
+//automatically redirect to https endpoints
+app.UseHttpsRedirection();
+//activate web API documentation with OpenApi
 app.UseOpenApi();
 
 //GET: /swagger
 app.UseSwaggerUi3();
 
+//Map Endpoints
 app.MapControllers();
-app.UseDeveloperExceptionPage();
 
 //GET: /
 app.MapGet("/", (IGdsService gds) => gds.GetEndpointURLs());
-
+//start WebApplication
 app.Run();
 

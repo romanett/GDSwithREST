@@ -20,7 +20,11 @@ namespace GDSwithREST.Services.GdsBackgroundService
             _certificateGroups = certificateGroup;
             _certificateRequests = certificateRequests;
         }
-
+        /// <summary>
+        /// Starts the OPC UA Global Discovery Server
+        /// </summary>
+        /// <param name="stoppingToken"></param>
+        /// <returns></returns>
         public async Task StartServer(CancellationToken stoppingToken)
         {
             if (_applicationInstance == null)
@@ -57,11 +61,17 @@ namespace GDSwithREST.Services.GdsBackgroundService
                 }
             }
         }
-
+        /// <summary>
+        /// Stops the OPC UA Global Discovery Server
+        /// </summary>
         public void StopServer()
         {
             _applicationInstance?.Stop();
         }
+        /// <summary>
+        /// returns all Endpoint URLs of the running OPC UA GDS
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<String> GetEndpointURLs()
         {
             if (_applicationInstance is null) return new List<String>();
