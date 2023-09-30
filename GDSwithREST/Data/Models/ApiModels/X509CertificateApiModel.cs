@@ -17,7 +17,7 @@ namespace GDSwithREST.Data.Models.ApiModels
 
         public X509CertificateApiModel(X509Certificate2 certificate)
         {
-            Certificate = Convert.ToBase64String(certificate.RawData);
+            Certificate = certificate.ExportCertificatePem();
             Thumbprint = certificate.Thumbprint;
             SerialNumber = certificate.SerialNumber;
             NotBefore = certificate.NotBefore;
@@ -27,7 +27,7 @@ namespace GDSwithREST.Data.Models.ApiModels
 
         public X509Certificate2 ToServiceModel()
         {
-            return new X509Certificate2(Convert.FromBase64String(Certificate));
+            return X509Certificate2.CreateFromPem(Certificate);
         }
     }
 }
