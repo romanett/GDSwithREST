@@ -9,10 +9,25 @@ on:
 jobs:
 
   build:
-
+    permissions: write-all
     runs-on: ubuntu-latest
 
     steps:
+    - name: setDate
+      run: echo "BUILDDATE=$(date --rfc-3339=date)" >> ${GITHUB_ENV}
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file ./GDSwithREST/Dockerfile --tag gdswithrest:$(date +%s)
+      run: docker build . --file ./GDSwithREST/Dockerfile --tag gdswithrest:$BUILDDATE
+
+    - name: Rename Docker image
+      run: docker tag gdswithrest:$BUILDDATE ghcr.io/romanett/gdswithrest:$BUILDDATE
+
+    - name: Login with Github Container registry
+      uses: docker/login-action@v2
+      with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish to Github Container registry
+      run: docker push ghcr.io/romanett/gdswithrest:$BUILDDATE
