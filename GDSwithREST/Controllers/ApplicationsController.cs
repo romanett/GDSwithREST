@@ -79,7 +79,7 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // POST: /Applications/register
         [HttpPost("register")]
-        public async Task<ActionResult<Applications>> RegisterApplication([FromBody] ApplicationApiModel applicationRaw)
+        public async Task<ActionResult<ApplicationApiModel>> RegisterApplication([FromBody] ApplicationApiModel applicationRaw)
         {
             if (_applicationsDatabase == null)
             {
@@ -127,6 +127,7 @@ namespace GDSwithREST.Controllers
             {
                 return NotFound();
             }
+            var certificateDeleted = false;
             try
             {
                 byte[] certificate;
@@ -134,7 +135,7 @@ namespace GDSwithREST.Controllers
                 {
                     if (certificate != null && certificate.Length > 0)
                     {
-                            ICertificateGroup certificateGroup = new CertificateGroup();
+                            ICertificateGroup? certificateGroup = null;
                                 var x509 = new X509Certificate2(certificate);
 
                                 foreach (var certificateGroups in _certificatesDatabase.CertificateGroups)
@@ -151,10 +152,11 @@ namespace GDSwithREST.Controllers
                                 {
                                     
                                     await _certificatesDatabase.RevokeCertificateAsync(x509).ConfigureAwait(false);
-                                }
-                                catch (Exception)
+                                    certificateDeleted = true;
+                            }
+                                catch
                                 {
-                                    //failed to delete certificate
+                                certificateDeleted = false;
                                 }
                             }
                     }
@@ -162,12 +164,7 @@ namespace GDSwithREST.Controllers
             }
             catch
             {
-                //failed to delete certificate
-            }
-            //ToDo Revoke Certificate
-            if (_context.Applications == null || _applicationsDatabase == null)
-            {
-                return NotFound();
+                certificateDeleted = false;
             }
             var applications =  await _context.Applications.SingleOrDefaultAsync(x => x.ApplicationId == id);
             if (applications == null)
@@ -177,7 +174,7 @@ namespace GDSwithREST.Controllers
             var nodeId = new NodeId(applications.ApplicationId);
             _applicationsDatabase.UnregisterApplication(nodeId);
 
-            return NoContent();
+            return Ok("Certificate revoked:" + certificateDeleted);
         }
 
     }

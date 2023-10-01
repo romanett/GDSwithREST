@@ -87,9 +87,9 @@ namespace GDSwithREST.Controllers
         // POST: /CertificateGroup/5/ca
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id:int}/ca")]
-        public async Task<ActionResult<Applications>> PostCertificateGroupCA(uint id, [FromBody] JsonElement subjectNameRaw)
+        public async Task<ActionResult<X509CertificateApiModel>> PostCertificateGroupCA(uint id, [FromBody] JsonElement subjectNameRaw)
         {
-            var subjectName = subjectNameRaw.GetRawText();
+            var subjectName = subjectNameRaw.ToString();
             if (_certificatesDatabase == null)
             {
                 return NotFound();
@@ -101,7 +101,7 @@ namespace GDSwithREST.Controllers
             }
             await certificateGroup.CreateCACertificateAsync(subjectName);
 
-            return CreatedAtAction("RecreatedCA", new { id = certificateGroup.Id.Identifier }, new X509CertificateApiModel( certificateGroup.Certificate));
+            return Ok(new X509CertificateApiModel(certificateGroup.Certificate));
         }
         /// <summary>
         /// revoke the specified Certifice in the specified Certificate Group
@@ -113,7 +113,7 @@ namespace GDSwithREST.Controllers
         [HttpDelete("{id:int}/cert/revoke")]
         public async Task<IActionResult> RevokeCertificateGroupCert(uint id, [FromBody] JsonElement certPemRaw)
         {
-            var certPem = certPemRaw.GetRawText();
+            var certPem = certPemRaw.ToString();
             if (_certificatesDatabase == null)
             {
                 return NotFound();

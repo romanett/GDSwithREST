@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Text.Json.Serialization;
 
 namespace GDSwithREST.Data.Models.ApiModels
 {
@@ -10,6 +11,8 @@ namespace GDSwithREST.Data.Models.ApiModels
         public int ApplicationType { get; set; }
         public string ProductUri { get; set; } = null!;
 
+        public string? Certificate { get;set; }
+
         //Certificate?
         public ApplicationApiModel(Applications application)
         {
@@ -18,6 +21,7 @@ namespace GDSwithREST.Data.Models.ApiModels
             ApplicationName = application.ApplicationName;
             ProductUri = application.ProductUri;
             ApplicationType = application.ApplicationType;
+            Certificate = new X509Certificate2(application.Certificate).ExportCertificatePem();
         }
         [JsonConstructor]
         public ApplicationApiModel(Guid applicationId, string applicationUri, string applicationName, int applicationType, string productUri)
