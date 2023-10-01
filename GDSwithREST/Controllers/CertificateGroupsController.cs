@@ -24,6 +24,7 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // GET: /CertificateGroups
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CertificateGroupApiModel))]
         public ActionResult<IEnumerable<CertificateGroupApiModel>> GetCertificateGroups()
         {
             var certificateGroups =
@@ -38,6 +39,8 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // GET: /CertificateGroups/5/ca
         [HttpGet("{id:int}/ca")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(X509CertificateApiModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<X509CertificateApiModel> GetCertificateGroupCA(uint id)
         {
             if (_certificatesDatabase == null)
@@ -60,6 +63,8 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // GET: /CertificateGroups/5/trustlist
         [HttpGet("{id:int}/trustlist")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(X509CertificateApiModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<X509CertificateApiModel>>> GetCertificateGroupTrustList(uint id)
         {
             if (_certificatesDatabase == null)
@@ -87,6 +92,8 @@ namespace GDSwithREST.Controllers
         // POST: /CertificateGroup/5/ca
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("{id:int}/ca")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(X509CertificateApiModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<X509CertificateApiModel>> PostCertificateGroupCA(uint id, [FromBody] JsonElement subjectNameRaw)
         {
             var subjectName = subjectNameRaw.ToString();
@@ -111,6 +118,8 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // DELETE: /CertificateGroup/5/cert
         [HttpDelete("{id:int}/cert/revoke")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> RevokeCertificateGroupCert(uint id, [FromBody] JsonElement certPemRaw)
         {
             var certPem = certPemRaw.ToString();

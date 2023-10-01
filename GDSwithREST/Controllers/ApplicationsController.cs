@@ -38,6 +38,8 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // GET: /Applications
         [HttpGet]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, Type = typeof(ApplicationApiModel))]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<ApplicationApiModel>>> GetApplications()
         {
           if (_context.Applications == null)
@@ -57,6 +59,9 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // GET: /Applications/5
         [HttpGet("{id:Guid}")]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, Type = typeof(ApplicationApiModel))]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
+
         public async Task<ActionResult<ApplicationApiModel>> GetApplications(Guid id)
         {
             if (_context.Applications == null)
@@ -79,6 +84,8 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // POST: /Applications/register
         [HttpPost("register")]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status201Created, Type = typeof(ApplicationApiModel))]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ApplicationApiModel>> RegisterApplication([FromBody] ApplicationApiModel applicationRaw)
         {
             if (_applicationsDatabase == null)
@@ -121,6 +128,8 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // DELETE: /Applications/5
         [HttpDelete("{id:Guid}/unregister")]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteApplications(Guid id)
         {
             if (_context.Applications == null || _applicationsDatabase == null)
