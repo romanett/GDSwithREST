@@ -162,8 +162,9 @@ namespace GDSwithREST.Controllers
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Utils.LogError(e, "Failed to revoke Application Certificate");
                 certificateDeleted = false;
             }
             var applications =  await _context.Applications.SingleOrDefaultAsync(x => x.ApplicationId == id);
