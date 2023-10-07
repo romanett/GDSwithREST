@@ -5,7 +5,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
 {
     public interface ICertificateGroupDb : ICertificateGroup
     {
-        public List<CertificateGroup> CertificateGroups { get; }
-        public Task<X509Certificate2Collection> GetTrustList(CertificateGroup certificateGroup);
+        public List<ICertificateGroup> CertificateGroups { get; }
+        public Task<X509Certificate2Collection> GetTrustList(ICertificateGroup certificateGroup);
     }
 }

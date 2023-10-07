@@ -8,7 +8,7 @@ namespace GDSwithREST.Data.Models.ApiModels
 {
     public class CertificateGroupApiModel
     {
-        public CertificateGroupApiModel(CertificateGroup certificateGroup)
+        public CertificateGroupApiModel(ICertificateGroup certificateGroup)
         {
             try
             {
