@@ -140,7 +140,7 @@ namespace GDSwithREST.Controllers
             try
             {
                 byte[] certificate;
-                if (_applicationsDatabase.GetApplicationCertificate(id, nameof(Opc.Ua.ObjectTypeIds.ApplicationCertificateType), out certificate))
+                if (_applicationsDatabase.GetApplicationCertificate(new NodeId(id), nameof(Opc.Ua.ObjectTypeIds.ApplicationCertificateType), out certificate))
                 {
                     if (certificate != null && certificate.Length > 0)
                     {

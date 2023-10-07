@@ -572,7 +572,8 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
         {
             certificate = null;
 
-            Guid id = GetNodeIdGuid(applicationId);
+            Guid id = (Guid)applicationId.Identifier;
+            //Guid id = GetNodeIdGuid(applicationId);
 
             List<byte[]> certificates = new();
 
