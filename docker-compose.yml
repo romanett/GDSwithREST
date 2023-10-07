@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   minapi:
-    image: ${DOCKER_REGISTRY-}gdswithrest
+    image: "ghcr.io/romanett/gdswithrest:latest"
     build:
       context: .
       dockerfile: GDSwithREST/Dockerfile
