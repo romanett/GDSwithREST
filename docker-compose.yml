@@ -12,6 +12,8 @@ services:
         - "58810:58810"
     depends_on:
         - db
+    volumes:
+        - gds-data:/OPC Foundation
   db:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     ports:
@@ -19,4 +21,5 @@ services:
     environment:
         MSSQL_SA_PASSWORD: "jeh7he89u534758Ghe54"
         ACCEPT_EULA: "Y"
-
+volumes:
+    gds-data:
