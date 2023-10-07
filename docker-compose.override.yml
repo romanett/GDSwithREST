@@ -2,6 +2,10 @@ version: '3.4'
 
 services:
   minapi:
+    image: ${DOCKER_REGISTRY-}gdswithrest
+    build:
+      context: .
+      dockerfile: GDSwithREST/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
