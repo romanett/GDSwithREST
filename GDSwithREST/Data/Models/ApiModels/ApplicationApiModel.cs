@@ -21,7 +21,8 @@ namespace GDSwithREST.Data.Models.ApiModels
             ApplicationName = application.ApplicationName;
             ProductUri = application.ProductUri;
             ApplicationType = application.ApplicationType;
-            Certificate = new X509Certificate2(application.Certificate).ExportCertificatePem();
+            if(application.Certificate is not null)
+                Certificate = new X509Certificate2(application.Certificate).ExportCertificatePem();
         }
         [JsonConstructor]
         public ApplicationApiModel(Guid applicationId, string applicationUri, string applicationName, int applicationType, string productUri)
