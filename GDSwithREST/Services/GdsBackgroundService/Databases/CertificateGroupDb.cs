@@ -17,12 +17,15 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             return cg;
         }
 
+        public CertificateGroupDb() : base() { }
+
         protected CertificateGroupDb(
             string authoritiesStorePath,
             CertificateGroupConfiguration certificateGroupConfiguration
             )
             :base(authoritiesStorePath,
-            certificateGroupConfiguration){}
+            certificateGroupConfiguration)
+        { }
 
         public async Task<X509Certificate2Collection> GetTrustList()
         {
