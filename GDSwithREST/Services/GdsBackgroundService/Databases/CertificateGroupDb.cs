@@ -6,7 +6,7 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
 {
     public class CertificateGroupDb : CertificateGroup, ICertificateGroupDb
     {
-        public List<ICertificateGroup> CertificateGroups { get; } = new List<ICertificateGroup>();
+        public List<ICertificateGroupDb> CertificateGroups { get; } = new List<ICertificateGroupDb>();
 
         public override CertificateGroup Create(
             string storePath,
@@ -24,9 +24,9 @@ namespace GDSwithREST.Services.GdsBackgroundService.Databases
             :base(authoritiesStorePath,
             certificateGroupConfiguration){}
 
-        public async Task<X509Certificate2Collection> GetTrustList(ICertificateGroup certificateGroup)
+        public async Task<X509Certificate2Collection> GetTrustList()
         {
-            using (ICertificateStore store = CertificateStoreIdentifier.OpenStore(certificateGroup.Configuration.TrustedListPath))
+            using (ICertificateStore store = CertificateStoreIdentifier.OpenStore(Configuration.TrustedListPath))
             {
                 return await store.Enumerate();
             }
