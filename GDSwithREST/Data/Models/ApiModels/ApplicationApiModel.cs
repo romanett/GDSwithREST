@@ -21,7 +21,7 @@ namespace GDSwithREST.Data.Models.ApiModels
             ApplicationName = application.ApplicationName;
             ProductUri = application.ProductUri;
             ApplicationType = application.ApplicationType;
-            if(application.Certificate is not null)
+            if(application.Certificate.Length>0)
                 Certificate = new X509Certificate2(application.Certificate).ExportCertificatePem();
         }
         [JsonConstructor]
