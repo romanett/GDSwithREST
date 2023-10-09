@@ -160,7 +160,7 @@ namespace GDSwithREST.Controllers
                                 try
                                 {
                                     
-                                    await _certificatesDatabase.RevokeCertificateAsync(x509).ConfigureAwait(false);
+                                    await certificateGroup.RevokeCertificateAsync(x509).ConfigureAwait(false);
                                     certificateDeleted = true;
                             }
                                 catch
