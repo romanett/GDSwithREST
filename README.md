@@ -40,6 +40,16 @@ The application depends on a Micorosft SQL Server Database to work.
 
 For seamless deployment use the Docker-Compose file to setup the Application + the Database with ease.
 
+## How to switch to local references with fixes instead of the upstream NuGet packages
+
+1. Clone https://github.com/romanett/UA-.NETStandard
+2. Switch to branch https://github.com/romanett/GDSwithREST/tree/BetaGDSReference -> clone
+3. Put both Projects into the same respository
+4. Add Reference to Nuget Package Bouncy Castle 2.2.1 in Project GDSwith REST
+5. Build Project Opc.Ua.Gds.Server.Common
+6. Build Project GDSwithREST
+7. Run the GDSwithREST using docker-compose up
+
 ## Disclaimer
 
 This application is a proof of concept.
@@ -51,7 +61,5 @@ In the current implementation severe security concerns apply:
  - the API can be accessed without authentification
  - No logging is implemented
  - The OPC UA Endpoint uses a hardcoded PW
- - The certificates are lost once the application container is recreated
- - Database Error messages & Stack-Traces are exposed to the API user
 
 
