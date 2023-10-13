@@ -44,12 +44,12 @@ For seamless deployment use the Docker-Compose file to setup the Application + t
 
 1. wget https://raw.githubusercontent.com/romanett/GDSwithREST/master/docker-compose.yml
 
-2 .docker compose up
+2. docker compose up
 
 ## How to switch to local references with fixes instead of the upstream NuGet packages
 
-1. Clone https://github.com/romanett/UA-.NETStandard
-2. Switch to branch https://github.com/romanett/GDSwithREST/tree/BetaGDSReference -> clone
+1. Clone https://github.com/romanett/UA-.NETStandard -> swith to Branch allFixes
+2. Clone https://github.com/romanett/GDSwithREST/ -> switch to branch BetaGDSReference
 3. Put both Projects into the same respository
 4. Add Reference to Nuget Package Bouncy Castle 2.2.1 in Project GDSwith REST
 5. Build Project Opc.Ua.Gds.Server.Common
