@@ -1,11 +1,8 @@
 version: '3.4'
 
 services:
-  minapi:
-    image: "ghcr.io/romanett/gdswithrest:latest"
-    build:
-      context: .
-      dockerfile: GDSwithREST/Dockerfile
+  api:
+    image: "ghcr.io/romanett/gdswithrest:2023-11-04"
     ports:
         - "8080:8080"
         - "8081:8081"
@@ -14,6 +11,11 @@ services:
         - db
     volumes:
         - gds-data:/OPC Foundation
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=457834587hgedv343
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/OPC Foundation/HTTPSCert/aspnetapp.pfx
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+        
   db:
     image: "mcr.microsoft.com/mssql/server:2022-latest"
     ports:

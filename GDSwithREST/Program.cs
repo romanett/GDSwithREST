@@ -21,11 +21,7 @@ builder.Services.AddControllers();
 // Inject database dependency
 builder.Services.AddDbContext<GdsDbContext>(
     options => options.UseSqlServer(
-        new SqlConnectionStringBuilder(
-                builder.Configuration.GetConnectionString("Default"))
-                {
-                Password = builder.Configuration["DbPassword"]
-                }.ConnectionString));
+                builder.Configuration.GetConnectionString("Default")));
 if (builder.Environment.IsDevelopment())
 {
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();

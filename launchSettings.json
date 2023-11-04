@@ -3,17 +3,12 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "api",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
       "serviceActions": {
-        "minapi": "StartDebugging",
+        "api": "StartDebugging",
         "db": "StartWithoutDebugging"
-      }
-    },
-    "docker_compose2": {
-      "commandName": "DockerCompose",
-      "commandVersion": "1.0",
-      "serviceActions": {
-        "db": "StartWithoutDebugging",
-        "minapi": "StartDebugging"
       }
     }
   }

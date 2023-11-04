@@ -37,7 +37,7 @@ namespace GDSwithREST.Services.GdsBackgroundService
                     ConfigSectionName = "Opc.Ua.GlobalDiscoveryServer"
                 };
                 // load the application configuration.
-                await _applicationInstance.LoadApplicationConfiguration("Services/GdsBackgroundService/Opc.Ua.GlobalDiscoveryServer.Config.xml", false);
+                await _applicationInstance.LoadApplicationConfiguration("/OPC Foundation/GDS/config/Opc.Ua.GlobalDiscoveryServer.Config.xml", false);
                 // check the application certificate.
                 await _applicationInstance.CheckApplicationInstanceCertificate(false, 0);
 

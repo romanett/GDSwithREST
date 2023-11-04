@@ -18,12 +18,9 @@
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Services\GdsBackgroundService\Opc.Ua.GlobalDiscoveryServer.Config.xml" />
-  </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Services\GdsBackgroundService\Opc.Ua.GlobalDiscoveryServer.Config.xml" />
+    <Content Include="Services\GdsBackgroundService\Config\Opc.Ua.GlobalDiscoveryServer.Config.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +34,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.10" />
     <PackageReference Include="NSwag.AspNetCore" Version="13.20.0" />
     <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Gds.Server.Common" Version="1.4.372.56" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="HTTPSCert\" />
   </ItemGroup>
 
 </Project>

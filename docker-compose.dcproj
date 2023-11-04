@@ -6,7 +6,7 @@
     <ProjectGuid>a59db2ab-67b6-4606-b71e-240c07c713b7</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>minapi</DockerServiceName>
+    <DockerServiceName>api</DockerServiceName>
     <UserSecretsId>2c51a79d-d886-4e34-99a2-3eb0912de75f</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
