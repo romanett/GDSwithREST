@@ -24,13 +24,13 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // GET: /CertificateGroups
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CertificateGroupApiModel))]
-        public ActionResult<IEnumerable<CertificateGroupApiModel>> GetCertificateGroups()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CertificateGroupApiModel[]))]
+        public ActionResult<CertificateGroupApiModel[]> GetCertificateGroups()
         {
             var certificateGroups =
                 from certificateGroup in _certificatesDatabase.CertificateGroups
                 select new CertificateGroupApiModel(certificateGroup);
-            return Ok(certificateGroups);
+            return Ok(certificateGroups.ToArray());
         }
         /// <summary>
         /// Returns the CA Certificate of the specified Certificate Group
@@ -63,9 +63,9 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // GET: /CertificateGroups/5/trustlist
         [HttpGet("{id:int}/trustlist")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(X509CertificateApiModel))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(X509CertificateApiModel[]))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<X509CertificateApiModel>>> GetCertificateGroupTrustList(uint id)
+        public async Task<ActionResult<X509CertificateApiModel[]>> GetCertificateGroupTrustList(uint id)
         {
             if (_certificatesDatabase == null)
             {
@@ -81,7 +81,7 @@ namespace GDSwithREST.Controllers
             var trustList =
                 from cert in trustedCertificatesCollection
                 select new X509CertificateApiModel(cert);
-            return  Ok(trustList);
+            return  Ok(trustList.ToArray());
         }
         /// <summary>
         /// Regenerate the CA Certificate of the specified Certificate Group
@@ -94,9 +94,8 @@ namespace GDSwithREST.Controllers
         [HttpPost("{id:int}/ca")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(X509CertificateApiModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<X509CertificateApiModel>> PostCertificateGroupCA(uint id, [FromBody] JsonElement subjectNameRaw)
+        public async Task<ActionResult<X509CertificateApiModel>> PostCertificateGroupCA(uint id)
         {
-            var subjectName = subjectNameRaw.ToString();
             if (_certificatesDatabase == null)
             {
                 return NotFound();
@@ -106,7 +105,7 @@ namespace GDSwithREST.Controllers
             {
                 return NotFound();
             }
-            await certificateGroup.CreateCACertificateAsync(subjectName);
+            await certificateGroup.CreateCACertificateAsync(certificateGroup.Configuration.SubjectName);
 
             return Ok(new X509CertificateApiModel(certificateGroup.Certificate));
         }

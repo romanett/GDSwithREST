@@ -38,9 +38,9 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // GET: /Applications
         [HttpGet]
-        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, Type = typeof(ApplicationApiModel))]
+        [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK, Type = typeof(ApplicationApiModel[]))]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<ApplicationApiModel>>> GetApplications()
+        public async Task<ActionResult<ApplicationApiModel[]>> GetApplications()
         {
           if (_context.Applications == null)
           {
@@ -50,7 +50,7 @@ namespace GDSwithREST.Controllers
             var applicationsAsApiModel =
                from application in applications
                select new ApplicationApiModel(application);
-            return Ok(applicationsAsApiModel);
+            return Ok(applicationsAsApiModel.ToArray());
         }
         /// <summary>
         /// Returns the specified Application
