@@ -101,7 +101,7 @@ namespace GDSwithREST.Controllers
             {
                 ApplicationId = applicationRaw.ApplicationId,
                 ApplicationUri = applicationRaw.ApplicationUri,
-                ApplicationType = (ApplicationType)applicationRaw.ApplicationType,
+                ApplicationType = (Opc.Ua.ApplicationType)applicationRaw.ApplicationType,
                 ApplicationNames = applicationName,
                 ProductUri = applicationRaw.ProductUri
             };

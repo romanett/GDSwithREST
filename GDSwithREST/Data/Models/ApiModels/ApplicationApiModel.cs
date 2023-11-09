@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Runtime.Serialization;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 
 namespace GDSwithREST.Data.Models.ApiModels
@@ -20,7 +21,7 @@ namespace GDSwithREST.Data.Models.ApiModels
         /// The name of the Application
         /// </summary>
         public string ApplicationName { get; set; } = null!;
-        public int ApplicationType { get; set; }
+        public ApplicationType ApplicationType { get; set; }
         public string ProductUri { get; set; } = null!;
         /// <summary>
         /// The gds signed certificate of the Application
@@ -34,7 +35,7 @@ namespace GDSwithREST.Data.Models.ApiModels
             ApplicationUri = application.ApplicationUri;
             ApplicationName = application.ApplicationName;
             ProductUri = application.ProductUri;
-            ApplicationType = application.ApplicationType;
+            ApplicationType = (ApplicationType)application.ApplicationType;
             if(application.Certificate.Length > 0)
                 Certificate = new X509CertificateApiModel(new X509Certificate2(application.Certificate));
         }
@@ -44,8 +45,22 @@ namespace GDSwithREST.Data.Models.ApiModels
             ApplicationId = applicationId;
             ApplicationUri = applicationUri;
             ApplicationName = applicationName;
-            ApplicationType = applicationType;
+            ApplicationType = (ApplicationType)applicationType;
             ProductUri = productUri;
         }
+    }
+    /// <summary>
+    /// Type of the registered OPC UA Application
+    /// </summary>
+    public enum ApplicationType
+    {
+        [EnumMember(Value = "Server_0")]
+        Server,
+        [EnumMember(Value = "Client_1")]
+        Client,
+        [EnumMember(Value = "ClientAndServer_2")]
+        ClientAndServer,
+        [EnumMember(Value = "DiscoveryServer_3")]
+        DiscoveryServer
     }
 }
