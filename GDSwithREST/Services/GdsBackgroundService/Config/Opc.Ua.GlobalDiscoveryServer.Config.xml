@@ -136,7 +136,7 @@
           <CertificateGroupConfiguration>
             <Id>Default</Id>
             <CertificateType>RsaSha256ApplicationCertificateType</CertificateType>
-            <SubjectName>CN=IOP-2018 CA, O=OPC Foundation</SubjectName>
+            <SubjectName>CN=GDSwithREST-2023 CA, O=OPC Foundation</SubjectName>
             <BaseStorePath>%LocalApplicationData%/OPC Foundation/GDS/PKI/CA/default</BaseStorePath>
             <DefaultCertificateLifetime>12</DefaultCertificateLifetime>
             <DefaultCertificateKeySize>2048</DefaultCertificateKeySize>
@@ -145,6 +145,18 @@
             <CACertificateKeySize>4096</CACertificateKeySize>
             <CACertificateHashSize>512</CACertificateHashSize>
           </CertificateGroupConfiguration>
+		  <CertificateGroupConfiguration>
+				<Id>DefaultHttpsGroup</Id>
+				<CertificateType>HttpsCertificateType</CertificateType>
+				<SubjectName>CN=GDSwithREST-2023 HTTPS-CA, O=OPC Foundation</SubjectName>
+				<BaseStorePath>%LocalApplicationData%/OPC Foundation/GDS/PKI/CA/https</BaseStorePath>
+				<DefaultCertificateLifetime>12</DefaultCertificateLifetime>
+				<DefaultCertificateKeySize>2048</DefaultCertificateKeySize>
+				<DefaultCertificateHashSize>256</DefaultCertificateHashSize>
+				<CACertificateLifetime>60</CACertificateLifetime>
+				<CACertificateKeySize>4096</CACertificateKeySize>
+				<CACertificateHashSize>512</CACertificateHashSize>
+		  </CertificateGroupConfiguration>
         </CertificateGroups>
         <KnownHostNames/>
         <ShutdownDelay>5</ShutdownDelay>
