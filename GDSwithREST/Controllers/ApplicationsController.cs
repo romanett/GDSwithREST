@@ -13,6 +13,9 @@ using GDSwithREST.Data.Models.ApiModels;
 
 namespace GDSwithREST.Controllers
 {
+    /// <summary>
+    /// API Rout for getting Applications registered at the GDS
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class ApplicationsController : ControllerBase

@@ -3,6 +3,9 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace GDSwithREST.Data.Models.ApiModels
 {
+    /// <summary>
+    /// A X509 Certificate
+    /// </summary>
     public class X509CertificateApiModel
     {
         public string Subject { get; set; }
@@ -15,6 +18,8 @@ namespace GDSwithREST.Data.Models.ApiModels
 
         public string Certificate { get; set; }
 
+        public string Issuer { get; set; }
+
         public X509CertificateApiModel(X509Certificate2 certificate)
         {
             Certificate = certificate.ExportCertificatePem();
@@ -23,6 +28,7 @@ namespace GDSwithREST.Data.Models.ApiModels
             NotBefore = certificate.NotBefore;
             NotAfter = certificate.NotAfter;
             Subject = certificate.Subject;
+            Issuer = certificate.Issuer;
         }
 
         public X509Certificate2 ToServiceModel()

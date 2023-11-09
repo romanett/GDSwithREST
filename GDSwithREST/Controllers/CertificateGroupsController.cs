@@ -8,6 +8,9 @@ using System.Text.Json;
 
 namespace GDSwithREST.Controllers
 {
+    /// <summary>
+    /// API Route to return Information about Certificate Groups
+    /// </summary>
     [Route("[controller]")]
     [ApiController]
     public class CertificateGroupsController : ControllerBase
@@ -87,7 +90,6 @@ namespace GDSwithREST.Controllers
         /// Regenerate the CA Certificate of the specified Certificate Group
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="subjectNameRaw"></param>
         /// <returns></returns>
         // POST: /CertificateGroup/5/ca
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

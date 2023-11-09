@@ -7,7 +7,6 @@ namespace GDSwithREST.Services.GdsBackgroundService
         /// <summary>
         /// returns the Endpoints of the OPC UA GDS Server
         /// </summary>
-        /// <returns cref="EndpointDescriptionCollection"><<returns>
         public IEnumerable<String> GetEndpointURLs();
 
         public Task StartServer(CancellationToken stoppingToken);

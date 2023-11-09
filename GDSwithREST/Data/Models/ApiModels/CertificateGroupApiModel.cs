@@ -6,6 +6,9 @@ using GDSwithREST.Services.GdsBackgroundService.Databases;
 
 namespace GDSwithREST.Data.Models.ApiModels
 {
+    /// <summary>
+    /// Certificate Group of the GDS
+    /// </summary>
     public class CertificateGroupApiModel
     {
         public CertificateGroupApiModel(CertificateGroup certificateGroup)
