@@ -2,6 +2,7 @@
 using GDSwithREST.Data.Models;
 using GDSwithREST.Data.Models.ApiModels;
 using GDSwithREST.Services.GdsBackgroundService.Databases;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
@@ -93,9 +94,10 @@ namespace GDSwithREST.Controllers
         /// <returns></returns>
         // POST: /CertificateGroup/5/ca
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("{id:int}/ca")]
+        [HttpPost("{id:int}/ca"), Authorize]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(X509CertificateApiModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<X509CertificateApiModel>> PostCertificateGroupCA(uint id)
         {
             if (_certificatesDatabase == null)

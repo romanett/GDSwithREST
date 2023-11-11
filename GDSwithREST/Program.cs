@@ -5,7 +5,11 @@ using GDSwithREST.Services.GdsBackgroundService;
 using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Opc.Ua.Gds.Server;
 using Opc.Ua.Gds.Server.Database;
-using NSwag.Generation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 
 
 #region webApplicationBuilder
@@ -30,8 +34,38 @@ if (builder.Environment.IsDevelopment())
 builder.Services.AddOpenApiDocument(options =>
 { 
     options.Title = "GDSwithREST API";
-    options.DocumentName = "GDSwithREST API"; 
-}) ;
+    options.DocumentName = "GDSwithREST API";
+    options.AddSecurity("JWT authorization",new OpenApiSecurityScheme
+    { 
+        Type=  OpenApiSecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "JwtBearerDefaults.AuthenticationScheme",
+        In = OpenApiSecurityApiKeyLocation.Header,
+        Name= "Authorization",
+        Description = "Provide your JWT Token"
+    });
+    options.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
+});
+
+//Add Authentification
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
+{
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey
+        (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = false,
+        ValidateIssuerSigningKey = true
+    };
+});
 
 var app = builder.Build();
 #endregion
@@ -42,6 +76,11 @@ if (!app.Environment.IsDevelopment())
 }
 //automatically redirect to https endpoints
 app.UseHttpsRedirection();
+
+//add authentification & authorization
+app.UseAuthentication();
+app.UseAuthorization();
+
 //activate web API documentation with OpenApi
 app.UseOpenApi();
 
