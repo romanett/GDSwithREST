@@ -35,12 +35,12 @@ builder.Services.AddOpenApiDocument(options =>
 { 
     options.Title = "GDSwithREST API";
     options.DocumentName = "GDSwithREST API";
-    options.AddSecurity("JWT authorization",new OpenApiSecurityScheme
+    options.AddSecurity("Bearer",new OpenApiSecurityScheme
     { 
         Type=  OpenApiSecuritySchemeType.Http,
         BearerFormat = "JWT",
-        Scheme = "JwtBearerDefaults.AuthenticationScheme",
-        In = OpenApiSecurityApiKeyLocation.Header,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        In= OpenApiSecurityApiKeyLocation.Header,
         Name= "Authorization",
         Description = "Provide your JWT Token"
     });
