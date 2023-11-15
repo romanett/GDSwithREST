@@ -1,7 +1,5 @@
-﻿
-using GDSwithREST.Data.Models;
-using GDSwithREST.Data.Models.ApiModels;
-using GDSwithREST.Services.GdsBackgroundService.Databases;
+﻿using GDSwithREST.Domain.ApiModels;
+using GDSwithREST.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
@@ -15,11 +13,11 @@ namespace GDSwithREST.Controllers
     [ApiController]
     public class CertificateGroupsController : ControllerBase
     {
-        private readonly ICertificateGroupDb _certificatesDatabase;
+        private readonly ICertificateGroupService _certificateGroupService;
 
-        public CertificateGroupsController(ICertificateGroupDb certificates)
+        public CertificateGroupsController(ICertificateGroupService certificates)
         {
-            _certificatesDatabase = certificates;
+            _certificateGroupService = certificates;
         }
         /// <summary>
         /// Returns all Certificate Groups of the GDS
@@ -31,7 +29,7 @@ namespace GDSwithREST.Controllers
         public ActionResult<CertificateGroupApiModel[]> GetCertificateGroups()
         {
             var certificateGroups =
-                from certificateGroup in _certificatesDatabase.CertificateGroups
+                from certificateGroup in _certificateGroupService.CertificateGroups
                 select new CertificateGroupApiModel(certificateGroup);
             return Ok(certificateGroups.ToArray());
         }
@@ -46,11 +44,11 @@ namespace GDSwithREST.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<X509CertificateApiModel> GetCertificateGroupCA(uint id)
         {
-            if (_certificatesDatabase == null)
+            if (_certificateGroupService == null)
             {
                 return NotFound();
             }
-            var certificateGroup = _certificatesDatabase.CertificateGroups.SingleOrDefault(x => (uint)x.Id.Identifier == id);
+            var certificateGroup = _certificateGroupService.CertificateGroups.SingleOrDefault(x => (uint)x.Id.Identifier == id);
 
             if (certificateGroup == null)
             {
@@ -70,17 +68,17 @@ namespace GDSwithREST.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<X509CertificateApiModel[]>> GetCertificateGroupTrustList(uint id)
         {
-            if (_certificatesDatabase == null)
+            if (_certificateGroupService == null)
             {
                 return NotFound();
             }
-            var certificateGroup = _certificatesDatabase.CertificateGroups.SingleOrDefault(x => (uint)x.Id.Identifier == id);
+            var certificateGroup = _certificateGroupService.CertificateGroups.SingleOrDefault(x => (uint)x.Id.Identifier == id);
 
             if (certificateGroup == null)
             {
                 return NotFound();
             }
-            var trustedCertificatesCollection = await _certificatesDatabase.GetTrustList(certificateGroup);
+            var trustedCertificatesCollection = await _certificateGroupService.GetTrustList(certificateGroup);
             var trustList =
                 from cert in trustedCertificatesCollection
                 select new X509CertificateApiModel(cert);
@@ -98,11 +96,11 @@ namespace GDSwithREST.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<X509CertificateApiModel>> PostCertificateGroupCA(uint id)
         {
-            if (_certificatesDatabase == null)
+            if (_certificateGroupService == null)
             {
                 return NotFound();
             }
-            var certificateGroup = _certificatesDatabase.CertificateGroups.SingleOrDefault(x => (uint)x.Id.Identifier == id);
+            var certificateGroup = _certificateGroupService.CertificateGroups.SingleOrDefault(x => (uint)x.Id.Identifier == id);
             if (certificateGroup == null)
             {
                 return NotFound();
@@ -124,11 +122,11 @@ namespace GDSwithREST.Controllers
         public async Task<IActionResult> RevokeCertificateGroupCert(uint id, [FromBody] JsonElement certPemRaw)
         {
             var certPem = certPemRaw.ToString();
-            if (_certificatesDatabase == null)
+            if (_certificateGroupService == null)
             {
                 return NotFound();
             }
-            var certificateGroup = _certificatesDatabase.CertificateGroups.SingleOrDefault(x => (uint)x.Id.Identifier == id);
+            var certificateGroup = _certificateGroupService.CertificateGroups.SingleOrDefault(x => (uint)x.Id.Identifier == id);
             if (certificateGroup == null)
             {
                 return NotFound();
