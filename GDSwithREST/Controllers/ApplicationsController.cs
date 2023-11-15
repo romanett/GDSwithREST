@@ -8,6 +8,7 @@ using GDSwithREST.Domain.Repositories;
 using GDSwithREST.Domain.ApiModels;
 using Microsoft.IdentityModel.Tokens;
 using GDSwithREST.Domain.Services;
+using GDSwithREST.Infrastructure.Repositories;
 
 namespace GDSwithREST.Controllers
 {
@@ -25,7 +26,6 @@ namespace GDSwithREST.Controllers
         /// </summary>
         /// <param name="applicationRepository"></param>
         /// <param name="applicationsDatabase"></param>
-        /// <param name="certificatesDatabase"></param>
         public ApplicationsController(IApplicationRepository applicationRepository, IApplicationsDatabase applicationsDatabase)
         {
             ArgumentNullException.ThrowIfNull(applicationRepository);
@@ -118,9 +118,13 @@ namespace GDSwithREST.Controllers
         [HttpDelete("{id:Guid}/unregister")]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
+#pragma warning disable CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         public async Task<IActionResult> DeleteApplications(Guid id, [FromServices] ICertificateGroupService certificateGroupService)
+#pragma warning restore CS1573 // Parameter has no matching param tag in the XML comment (but other parameters do)
         {
-            if(_applicationRepository.GetApplicationById(id) is null)
+            ArgumentNullException.ThrowIfNull(certificateGroupService);
+
+            if (_applicationRepository.GetApplicationById(id) is null)
                 return NotFound();
 
             try
