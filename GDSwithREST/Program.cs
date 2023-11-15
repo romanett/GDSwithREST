@@ -1,31 +1,34 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using GDSwithREST.Data;
-using GDSwithREST.Services.GdsBackgroundService;
-using GDSwithREST.Services.GdsBackgroundService.Databases;
+using GDSwithREST.Domain.Services;
 using Opc.Ua.Gds.Server;
 using Opc.Ua.Gds.Server.Database;
-using NSwag.Generation.AspNetCore;
+using GDSwithREST.Infrastructure;
+using GDSwithREST.Domain.Repositories;
+using GDSwithREST.Infrastructure.Repositories;
+using GDSwithREST;
 
 
 #region webApplicationBuilder
 var builder = WebApplication.CreateBuilder(args);
 //Inject dependencies for the GDS
-builder.Services.AddSingleton<IApplicationsDatabase, ApplicationDb>();
-builder.Services.AddSingleton<ICertificateGroupDb, CertificateGroupDb>();
-builder.Services.AddSingleton<ICertificateRequest, CertificateRequestDb>();
+builder.Services.AddSingleton<IApplicationsDatabase, ApplicationService>();
+builder.Services.AddSingleton<ICertificateGroupService, CertificateGroupService>();
+builder.Services.AddSingleton<ICertificateRequest, CertificateRequestService>();
 builder.Services.AddSingleton<IGdsService, GdsService>();
 //Run GDS as hosted service in the background
 builder.Services.AddHostedService<GdsBackgroundService>();
 builder.Services.AddControllers();
-// Inject database dependency
+// Inject Infrastructure dependencies
 builder.Services.AddDbContext<GdsDbContext>(
     options => options.UseSqlServer(
                 builder.Configuration.GetConnectionString("Default")));
-if (builder.Environment.IsDevelopment())
-{
-    builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-}
+builder.Services.AddScoped<IApplicationNameRepository, ApplicationNameRepository>(); 
+builder.Services.AddScoped<ICertificateRequestRepository, CertificateRequestRepository>();
+builder.Services.AddScoped<ICertificateStoreRepository,CertificateStoreRepository>();
+builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
+builder.Services.AddScoped<IPersistencyRepository, PersistencyRepository>();
+builder.Services.AddScoped<IServerEndpointRepository, ServerEndpointRepository>();
+
 //Enable OpenApiDocumenation
 builder.Services.AddOpenApiDocument(options =>
 { 

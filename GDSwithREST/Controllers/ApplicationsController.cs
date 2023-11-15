@@ -1,15 +1,13 @@
-﻿
-using GDSwithREST.Data.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using GDSwithREST.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using Opc.Ua.Gds;
 using Opc.Ua.Gds.Server.Database;
 using Opc.Ua;
-using GDSwithREST.Services.GdsBackgroundService.Databases;
 using Opc.Ua.Gds.Server;
 using System.Security.Cryptography.X509Certificates;
-using GDSwithREST.Data.Models.ApiModels;
+using GDSwithREST.Domain.Repositories;
+using GDSwithREST.Domain.ApiModels;
+using Microsoft.IdentityModel.Tokens;
+using GDSwithREST.Domain.Services;
 
 namespace GDSwithREST.Controllers
 {
@@ -20,18 +18,21 @@ namespace GDSwithREST.Controllers
     [ApiController]
     public class ApplicationsController : ControllerBase
     {
-        private readonly GdsDbContext _context;
+        private readonly IApplicationRepository _applicationRepository;
         private readonly IApplicationsDatabase _applicationsDatabase;
-        private readonly ICertificateGroupDb _certificatesDatabase;
+        private readonly ICertificateGroupService _certificatesDatabase;
         /// <summary>
         /// Controller for all Endpoints having to do with registered OPC UA Applications of the GDS
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="applicationRepository"></param>
         /// <param name="applicationsDatabase"></param>
         /// <param name="certificatesDatabase"></param>
-        public ApplicationsController(GdsDbContext context, IApplicationsDatabase applicationsDatabase, ICertificateGroupDb certificatesDatabase)
+        public ApplicationsController(IApplicationRepository applicationRepository, IApplicationsDatabase applicationsDatabase, ICertificateGroupService certificatesDatabase)
         {
-            _context = context;
+            ArgumentNullException.ThrowIfNull(applicationRepository);
+            ArgumentNullException.ThrowIfNull(applicationsDatabase);
+            ArgumentNullException.ThrowIfNull(certificatesDatabase);
+            _applicationRepository = applicationRepository;
             _applicationsDatabase = applicationsDatabase;
             _certificatesDatabase = certificatesDatabase;
         }
@@ -45,15 +46,13 @@ namespace GDSwithREST.Controllers
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ApplicationApiModel[]>> GetApplications()
         {
-          if (_context.Applications == null)
-          {
-              return NotFound();
-          }
-          var applications = await _context.Applications.ToListAsync();
-            var applicationsAsApiModel =
-               from application in applications
-               select new ApplicationApiModel(application);
-            return Ok(applicationsAsApiModel.ToArray());
+          var applications = await _applicationRepository.GetAllApplications();
+          if (applications.IsNullOrEmpty())
+            {
+                return NotFound();
+            }
+            var applicationsAsApiModel = applications.Select(x => new ApplicationApiModel(x)).ToArray();
+            return Ok(applicationsAsApiModel);
         }
         /// <summary>
         /// Returns the specified Application
@@ -67,11 +66,7 @@ namespace GDSwithREST.Controllers
 
         public async Task<ActionResult<ApplicationApiModel>> GetApplications(Guid id)
         {
-            if (_context.Applications == null)
-            {
-                return NotFound();
-            }
-            var application = await _context.Applications.SingleOrDefaultAsync(x => x.ApplicationId == id);
+            var application = await _applicationRepository.GetApplicationById(id);
 
             if (application == null)
             {
@@ -106,23 +101,16 @@ namespace GDSwithREST.Controllers
                 ProductUri = applicationRaw.ProductUri
             };
             var nodeId = _applicationsDatabase.RegisterApplication(application);
-            if (nodeId == null)
-            {
-                return Problem("Application Registration failed.");
-            }
-            var applicationID = new Guid(nodeId.Identifier.ToString()!);
-            if (_context.Applications == null)
-            {
-                return Problem("Application Registration failed.");
-            }
-            var applications = await _context.Applications.SingleOrDefaultAsync(x => x.ApplicationId == applicationID);
+            
+            var applicationId = (Guid)nodeId.Identifier;
+
+            var applications = await _applicationRepository.GetApplicationById(applicationId);
 
             if (applications == null)
             {
                 return Problem("Application Registration failed.");
             }
-
-            return CreatedAtAction("GetApplications", new { id = applications.ApplicationId }, new ApplicationApiModel(applications));
+            return CreatedAtAction("GetApplications", $"applications/{applicationId}", new ApplicationApiModel(applications));
         }
         /// <summary>
         /// unregister an exisiting Application from the OPC UA GDS
@@ -135,60 +123,47 @@ namespace GDSwithREST.Controllers
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteApplications(Guid id)
         {
-            if (_context.Applications == null || _applicationsDatabase == null)
-            {
+            if(_applicationRepository.GetApplicationById(id) is null)
                 return NotFound();
-            }
-            var certificateDeleted = false;
+
             try
             {
-                byte[] certificate;
-                if (_applicationsDatabase.GetApplicationCertificate(new NodeId(id), nameof(Opc.Ua.ObjectTypeIds.ApplicationCertificateType), out certificate))
-                {
-                    if (certificate != null && certificate.Length > 0)
-                    {
-                            ICertificateGroup? certificateGroup = null;
-                                var x509 = new X509Certificate2(certificate);
-
-                                foreach (var certificateGroups in _certificatesDatabase.CertificateGroups)
-                                {
-                                    if (X509Utils.CompareDistinguishedName(certificateGroups.Certificate.Subject, x509.Issuer))
-                                    {
-                                        certificateGroup = certificateGroups;
-                                    }
-                                }
-
-                        if (certificateGroup != null)
-                            {
-                                try
-                                {
-                                    
-                                    await _certificatesDatabase.RevokeCertificateAsync(x509).ConfigureAwait(false);
-                                    certificateDeleted = true;
-                            }
-                                catch
-                                {
-                                certificateDeleted = false;
-                                }
-                            }
-                    }
-                }
+                if (_applicationsDatabase.GetApplicationCertificate(new NodeId(id, _applicationsDatabase.NamespaceIndex), nameof(Opc.Ua.ObjectTypeIds.ApplicationCertificateType), out var certificate))
+                    await RevokeApplicationCertificate(certificate);
+                if (_applicationsDatabase.GetApplicationCertificate(new NodeId(id, _applicationsDatabase.NamespaceIndex), nameof(Opc.Ua.ObjectTypeIds.HttpsCertificateType), out var httpsCertificate))
+                    await RevokeApplicationCertificate(httpsCertificate);
             }
             catch (Exception e)
             {
                 Utils.LogError(e, "Failed to revoke Application Certificate");
-                certificateDeleted = false;
+                return Problem("Failed to revoke Application Certificate \n" + e.ToString());
             }
-            var applications =  await _context.Applications.SingleOrDefaultAsync(x => x.ApplicationId == id);
-            if (applications == null)
-            {
-                return NotFound();
-            }
-            var nodeId = new NodeId(applications.ApplicationId);
+
+            var nodeId = new NodeId(id, _applicationsDatabase.NamespaceIndex);
             _applicationsDatabase.UnregisterApplication(nodeId);
 
-            return Ok("Certificate revoked:" + certificateDeleted);
+            return Ok();
         }
 
+        private async Task RevokeApplicationCertificate(byte[]? certificate)
+        {
+                if (certificate != null && certificate.Length > 0)
+                {
+                    ICertificateGroup? certificateGroup = null;
+                    var x509 = new X509Certificate2(certificate);
+
+                    foreach (var certificateGroups in _certificatesDatabase.CertificateGroups)
+                    {
+                        if (X509Utils.CompareDistinguishedName(certificateGroups.Certificate.Subject, x509.Issuer))
+                        {
+                            certificateGroup = certificateGroups;
+                        }
+                    }
+                    if (certificateGroup != null)
+                    {
+                       await _certificatesDatabase.RevokeCertificateAsync(x509).ConfigureAwait(false);
+                    }
+                }
+            }
     }
 }

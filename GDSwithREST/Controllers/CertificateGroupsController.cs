@@ -1,7 +1,5 @@
-﻿
-using GDSwithREST.Data.Models;
-using GDSwithREST.Data.Models.ApiModels;
-using GDSwithREST.Services.GdsBackgroundService.Databases;
+﻿using GDSwithREST.Domain.ApiModels;
+using GDSwithREST.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
@@ -15,9 +13,9 @@ namespace GDSwithREST.Controllers
     [ApiController]
     public class CertificateGroupsController : ControllerBase
     {
-        private readonly ICertificateGroupDb _certificatesDatabase;
+        private readonly ICertificateGroupService _certificatesDatabase;
 
-        public CertificateGroupsController(ICertificateGroupDb certificates)
+        public CertificateGroupsController(ICertificateGroupService certificates)
         {
             _certificatesDatabase = certificates;
         }

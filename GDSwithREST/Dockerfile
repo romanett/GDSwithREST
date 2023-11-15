@@ -2,7 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
-COPY ["GDSwithREST/Services/GdsBackgroundService/Config", "/OPC Foundation/GDS/config"]
+COPY ["GDSwithREST/GdsConfig", "/OPC Foundation/GDS/config"]
 COPY ["GDSwithREST/HTTPSCert", "/OPC Foundation/HTTPSCert"]
 EXPOSE 8080
 EXPOSE 8081
