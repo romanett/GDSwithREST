@@ -20,21 +20,18 @@ namespace GDSwithREST.Controllers
     {
         private readonly IApplicationRepository _applicationRepository;
         private readonly IApplicationsDatabase _applicationsDatabase;
-        private readonly ICertificateGroupService _certificatesDatabase;
         /// <summary>
         /// Controller for all Endpoints having to do with registered OPC UA Applications of the GDS
         /// </summary>
         /// <param name="applicationRepository"></param>
         /// <param name="applicationsDatabase"></param>
         /// <param name="certificatesDatabase"></param>
-        public ApplicationsController(IApplicationRepository applicationRepository, IApplicationsDatabase applicationsDatabase, ICertificateGroupService certificatesDatabase)
+        public ApplicationsController(IApplicationRepository applicationRepository, IApplicationsDatabase applicationsDatabase)
         {
             ArgumentNullException.ThrowIfNull(applicationRepository);
             ArgumentNullException.ThrowIfNull(applicationsDatabase);
-            ArgumentNullException.ThrowIfNull(certificatesDatabase);
             _applicationRepository = applicationRepository;
             _applicationsDatabase = applicationsDatabase;
-            _certificatesDatabase = certificatesDatabase;
         }
         /// <summary>
         /// Returns all registered applications
@@ -115,13 +112,13 @@ namespace GDSwithREST.Controllers
         /// <summary>
         /// unregister an exisiting Application from the OPC UA GDS
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Guid of the Application to delete</param>
         /// <returns></returns>
         // DELETE: /Applications/5
         [HttpDelete("{id:Guid}/unregister")]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status200OK)]
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteApplications(Guid id)
+        public async Task<IActionResult> DeleteApplications(Guid id, [FromServices] ICertificateGroupService certificateGroupService)
         {
             if(_applicationRepository.GetApplicationById(id) is null)
                 return NotFound();
@@ -129,9 +126,9 @@ namespace GDSwithREST.Controllers
             try
             {
                 if (_applicationsDatabase.GetApplicationCertificate(new NodeId(id, _applicationsDatabase.NamespaceIndex), nameof(Opc.Ua.ObjectTypeIds.ApplicationCertificateType), out var certificate))
-                    await RevokeApplicationCertificate(certificate);
+                    await RevokeApplicationCertificate(certificate, certificateGroupService);
                 if (_applicationsDatabase.GetApplicationCertificate(new NodeId(id, _applicationsDatabase.NamespaceIndex), nameof(Opc.Ua.ObjectTypeIds.HttpsCertificateType), out var httpsCertificate))
-                    await RevokeApplicationCertificate(httpsCertificate);
+                    await RevokeApplicationCertificate(httpsCertificate, certificateGroupService);
             }
             catch (Exception e)
             {
@@ -145,14 +142,14 @@ namespace GDSwithREST.Controllers
             return Ok();
         }
 
-        private async Task RevokeApplicationCertificate(byte[]? certificate)
+        private async Task RevokeApplicationCertificate(byte[]? certificate, ICertificateGroupService certificateGroupService)
         {
                 if (certificate != null && certificate.Length > 0)
                 {
                     ICertificateGroup? certificateGroup = null;
                     var x509 = new X509Certificate2(certificate);
 
-                    foreach (var certificateGroups in _certificatesDatabase.CertificateGroups)
+                    foreach (var certificateGroups in certificateGroupService.CertificateGroups)
                     {
                         if (X509Utils.CompareDistinguishedName(certificateGroups.Certificate.Subject, x509.Issuer))
                         {
@@ -161,7 +158,7 @@ namespace GDSwithREST.Controllers
                     }
                     if (certificateGroup != null)
                     {
-                       await _certificatesDatabase.RevokeCertificateAsync(x509).ConfigureAwait(false);
+                       await certificateGroupService.RevokeCertificateAsync(x509).ConfigureAwait(false);
                     }
                 }
             }
