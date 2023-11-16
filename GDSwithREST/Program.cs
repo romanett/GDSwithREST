@@ -10,6 +10,18 @@ using GDSwithREST;
 
 #region webApplicationBuilder
 var builder = WebApplication.CreateBuilder(args);
+// Inject Infrastructure dependencies
+builder.Services.AddDbContext<GdsDbContext>(
+    options => options.UseSqlServer(
+                builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddScoped<IApplicationNameRepository, ApplicationNameRepository>();
+builder.Services.AddScoped<ICertificateRequestRepository, CertificateRequestRepository>();
+builder.Services.AddScoped<ICertificateStoreRepository, CertificateStoreRepository>();
+builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
+builder.Services.AddScoped<IPersistencyRepository, PersistencyRepository>();
+builder.Services.AddScoped<IServerEndpointRepository, ServerEndpointRepository>();
+
+
 //Inject dependencies for the GDS
 builder.Services.AddSingleton<IApplicationsDatabase, ApplicationService>();
 builder.Services.AddSingleton<ICertificateGroupService, CertificateGroupService>();
@@ -18,16 +30,6 @@ builder.Services.AddSingleton<IGdsService, GdsService>();
 //Run GDS as hosted service in the background
 builder.Services.AddHostedService<GdsBackgroundService>();
 builder.Services.AddControllers();
-// Inject Infrastructure dependencies
-builder.Services.AddDbContext<GdsDbContext>(
-    options => options.UseSqlServer(
-                builder.Configuration.GetConnectionString("Default")));
-builder.Services.AddScoped<IApplicationNameRepository, ApplicationNameRepository>(); 
-builder.Services.AddScoped<ICertificateRequestRepository, CertificateRequestRepository>();
-builder.Services.AddScoped<ICertificateStoreRepository,CertificateStoreRepository>();
-builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
-builder.Services.AddScoped<IPersistencyRepository, PersistencyRepository>();
-builder.Services.AddScoped<IServerEndpointRepository, ServerEndpointRepository>();
 
 //Enable OpenApiDocumenation
 builder.Services.AddOpenApiDocument(options =>
