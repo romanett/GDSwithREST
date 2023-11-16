@@ -1,6 +1,6 @@
 ﻿namespace GDSwithREST.Domain.Entities
 {
-    public sealed class CertificateRequest
+    public sealed record CertificateRequest
     {
         public int Id { get; set; }
         public Guid RequestId { get; set; }

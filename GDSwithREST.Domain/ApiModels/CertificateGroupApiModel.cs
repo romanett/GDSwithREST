@@ -7,7 +7,7 @@ namespace GDSwithREST.Domain.ApiModels
     /// <summary>
     /// Certificate Group of the GDS
     /// </summary>
-    public sealed class CertificateGroupApiModel
+    public sealed record CertificateGroupApiModel
     {
         public CertificateGroupApiModel(ICertificateGroup certificateGroup)
         {

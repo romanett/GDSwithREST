@@ -1,6 +1,6 @@
 ﻿namespace GDSwithREST.Domain.Entities
 {
-    public sealed class CertificateStore
+    public sealed record CertificateStore
     {
         public CertificateStore()
         {

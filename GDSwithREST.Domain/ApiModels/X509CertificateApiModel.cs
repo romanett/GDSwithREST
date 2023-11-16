@@ -5,7 +5,7 @@ namespace GDSwithREST.Domain.ApiModels
     /// <summary>
     /// A X509 Certificate
     /// </summary>
-    public sealed class X509CertificateApiModel
+    public sealed record X509CertificateApiModel
     {
         public string Subject { get; set; }
         public string Thumbprint { get; set; }

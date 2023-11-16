@@ -8,7 +8,7 @@ namespace GDSwithREST.Domain.ApiModels
     /// <summary>
     /// A GDS registered Application
     /// </summary>
-    public sealed class ApplicationApiModel
+    public sealed record ApplicationApiModel
     {
         /// <summary>
         /// The Guid identifying the Application
