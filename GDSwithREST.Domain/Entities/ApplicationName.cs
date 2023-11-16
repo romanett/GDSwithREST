@@ -1,6 +1,6 @@
 ﻿namespace GDSwithREST.Domain.Entities
 {
-    public sealed class ApplicationName
+    public sealed record ApplicationName
     {
         public int Id { get; set; }
         public int ApplicationId { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace GDSwithREST.Domain.Entities
 {
-    public sealed class ServerEndpoint
+    public sealed record ServerEndpoint
     {
         public int Id { get; set; }
         public int ApplicationId { get; set; }
