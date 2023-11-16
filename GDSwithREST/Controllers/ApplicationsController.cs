@@ -146,7 +146,7 @@ namespace GDSwithREST.Controllers
             return Ok();
         }
 
-        private async Task RevokeApplicationCertificate(byte[]? certificate, ICertificateGroupService certificateGroupService)
+        private static async Task RevokeApplicationCertificate(byte[]? certificate, ICertificateGroupService certificateGroupService)
         {
                 if (certificate != null && certificate.Length > 0)
                 {
