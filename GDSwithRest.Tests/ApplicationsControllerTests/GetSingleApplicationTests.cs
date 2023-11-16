@@ -9,16 +9,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Moq;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace GDSwithRest.Tests.ApplicationsControllerTests;
 
-public class GetApplicationsTests
+public class GetSingleApplicationTests
 {
     private readonly FakeApplicationRepository _applicationRepository;
     private readonly ApplicationService _applicationService;
 
-    public GetApplicationsTests()
+    public GetSingleApplicationTests()
     {
         _applicationRepository = new FakeApplicationRepository();
 
@@ -31,34 +32,57 @@ public class GetApplicationsTests
         _applicationService = new ApplicationService(serviceScopeFactory);
     }
 
+
     [Fact]
-    public async Task Returns_AllApplications()
+    public async Task Returns_CorrectApplication()
     {
         //Arrange
+        var id = _applicationRepository.Applications.First().ApplicationId;
+
         ApplicationsController controller = new ApplicationsController(_applicationRepository, _applicationService);
 
         //Act
-        var response = await controller.GetApplications();
+        var response = await controller.GetApplications(id);
+
+        //Assert
+            Assert.IsAssignableFrom<OkObjectResult>(response.Result);
+            var result = response.Result as OkObjectResult;
+            Assert.NotNull(result);
+            Assert.IsAssignableFrom<ApplicationApiModel>(result.Value);
+            var application = result.Value as ApplicationApiModel;
+            Assert.NotNull(application);
+            Assert.Equal(new ApplicationApiModel(_applicationRepository.Applications.Single(y => y.ApplicationId == id)), application);
+    }
+    [Fact]
+    public async Task Returns_CorrectApplication2()
+    {
+        //Arrange
+        var id = _applicationRepository.Applications.Last().ApplicationId;
+
+        ApplicationsController controller = new ApplicationsController(_applicationRepository, _applicationService);
+
+        //Act
+        var response = await controller.GetApplications(id);
 
         //Assert
         Assert.IsAssignableFrom<OkObjectResult>(response.Result);
         var result = response.Result as OkObjectResult;
         Assert.NotNull(result);
-        Assert.IsAssignableFrom<ApplicationApiModel[]>(result.Value);
-        var applications = result.Value as ApplicationApiModel[];
-        Assert.NotNull(applications);
-        Assert.Equal(_applicationRepository.Applications.Count, applications.Length);
+        Assert.IsAssignableFrom<ApplicationApiModel>(result.Value);
+        var application = result.Value as ApplicationApiModel;
+        Assert.NotNull(application);
+        Assert.Equal(new ApplicationApiModel(_applicationRepository.Applications.Single(y => y.ApplicationId == id)), application);
     }
 
     [Fact]
     public async Task Returns_NotFound()
     {
         //Arrange
-        _applicationRepository.Applications.Clear();
+        var id = Guid.NewGuid();
         ApplicationsController controller = new ApplicationsController(_applicationRepository, _applicationService);
 
         //Act
-        var response = await controller.GetApplications();
+        var response = await controller.GetApplications(id);
 
         //Assert
         Assert.IsAssignableFrom<NotFoundResult>(response.Result);

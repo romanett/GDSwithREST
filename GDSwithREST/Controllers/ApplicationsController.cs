@@ -70,7 +70,7 @@ namespace GDSwithREST.Controllers
                 return NotFound();
             }
 
-            return new ApplicationApiModel(application);
+            return Ok(new ApplicationApiModel(application));
         }
         /// <summary>
         /// Register a new Application at the GDS
