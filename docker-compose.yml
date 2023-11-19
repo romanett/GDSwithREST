@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   api:
-    image: "ghcr.io/romanett/gdswithrest:2023-11-16"
+    image: "ghcr.io/romanett/gdswithrest:2023-11-19"
     ports:
         - "8080:8080"
         - "8081:8081"
