@@ -16,9 +16,9 @@ namespace GDSwithREST.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task MigrateDatabaseAsync()
+        public void MigrateDatabase()
         {
-            await _context.Database.MigrateAsync();
+            _context.Database.Migrate();
         }
     }
 }

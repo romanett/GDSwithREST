@@ -1,5 +1,8 @@
 ﻿using GDSwithREST.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace GDSwithREST.Infrastructure
 {
@@ -22,7 +25,6 @@ namespace GDSwithREST.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlServer("");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -149,6 +151,21 @@ namespace GDSwithREST.Infrastructure
                     .HasForeignKey(d => d.ApplicationId)
                     .HasConstraintName("FK_ServerEndpoints_ApplicationId");
             });
+        }
+    }
+
+    public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<GdsDbContext>
+    {
+        public GdsDbContext CreateDbContext(string[] args)
+        {
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .Build();
+            var connectionString = configuration.GetConnectionString("Default");
+            var builder = new DbContextOptionsBuilder<GdsDbContext>();
+            builder.UseSqlServer(connectionString);
+            return new GdsDbContext(builder.Options);
         }
     }
 }

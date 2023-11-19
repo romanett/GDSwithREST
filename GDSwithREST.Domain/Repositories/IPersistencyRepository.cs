@@ -8,6 +8,6 @@ namespace GDSwithREST.Domain.Repositories
 {
     public interface IPersistencyRepository
     {
-        public Task MigrateDatabaseAsync();
+        public void MigrateDatabase();
     }
 }

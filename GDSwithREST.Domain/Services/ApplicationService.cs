@@ -24,7 +24,7 @@ namespace GDSwithREST.Domain.Services
             using var scope = _serviceScopeFactory.CreateScope();
             var persistencyRepository = scope.ServiceProvider.GetRequiredService<IPersistencyRepository>();
 
-            persistencyRepository.MigrateDatabaseAsync();
+            persistencyRepository.MigrateDatabase();
         }
 
         public override NodeId RegisterApplication(
