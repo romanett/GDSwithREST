@@ -22,13 +22,7 @@ public class GetSingleApplicationTests
     public GetSingleApplicationTests()
     {
         _applicationRepository = new FakeApplicationRepository();
-
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddScoped(sp => _applicationRepository);
-        var serviceScopeFactory = serviceCollection.BuildServiceProvider().GetService<IServiceScopeFactory>();
-
-        if (serviceScopeFactory is null)
-            throw new TestCanceledException("Could not intialite DI Service");
+        var serviceScopeFactory = DIService.GetServiceScopeFactory(_applicationRepository);
         _applicationService = new ApplicationService(serviceScopeFactory);
     }
 

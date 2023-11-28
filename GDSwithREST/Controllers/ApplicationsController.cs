@@ -83,10 +83,8 @@ namespace GDSwithREST.Controllers
         [ProducesResponseType(Microsoft.AspNetCore.Http.StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ApplicationApiModel>> RegisterApplication([FromBody] ApplicationApiModel applicationRaw)
         {
-            if (_applicationsDatabase == null)
-            {
-                return Problem("Application Registration failed.");
-            }
+            ArgumentNullException.ThrowIfNull(applicationRaw);
+
             var applicationName = new LocalizedTextCollection { 
                                     new LocalizedText("en-US", applicationRaw.ApplicationName)};
             var application = new ApplicationRecordDataType()

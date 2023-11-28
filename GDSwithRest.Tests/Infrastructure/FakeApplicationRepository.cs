@@ -13,16 +13,16 @@ namespace GDSwithRest.Tests.Infrastructure
     internal class FakeApplicationRepository : IApplicationRepository
     {
         private readonly List<Application> _applications = new(){
-            new Application() {ApplicationId= Guid.NewGuid(), ApplicationName = "TestApplication1", ApplicationType= 1 },
-            new Application() {ApplicationId= Guid.NewGuid(), ApplicationName = "TestApplication2", ApplicationType= 2 },
-            new Application() {ApplicationId= Guid.NewGuid(), ApplicationName = "TestApplication3", ApplicationType= 0 }
+            new Application() {ApplicationId= Guid.NewGuid(), ApplicationName = "TestApplication1", ApplicationUri="opc.tcp://localhost", ApplicationType= 1, ProductUri="https://localhost"},
+            new Application() {ApplicationId= Guid.NewGuid(), ApplicationName = "TestApplication2", ApplicationUri="opc.tcp://localhost", ApplicationType= 2, ProductUri="https://localhost"},
+            new Application() {ApplicationId= Guid.NewGuid(), ApplicationName = "TestApplication3", ApplicationUri="opc.tcp://localhost", ApplicationType= 0, ProductUri="https://localhost"}
         };
 
         public List<Application> Applications => _applications;
 
         public Application AddApplication(Application application)
         {
-             Applications.Add(application);
+            Applications.Add(application);
             return application;
         }
 

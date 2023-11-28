@@ -1,4 +1,5 @@
 ﻿using GDSwithREST.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
@@ -17,12 +18,19 @@ namespace GDSwithREST.Domain.ApiModels
         /// <summary>
         /// The Uri of the Application
         /// </summary>
+        [Required]
+        [MaxLength(1000)]
         public string ApplicationUri { get; set; } = null!;
         /// <summary>
         /// The name of the Application
         /// </summary>
+        [Required]
+        [MaxLength(1000)]
         public string ApplicationName { get; set; } = null!;
+        [Range(0, 3)]
         public ApplicationType ApplicationType { get; set; }
+        [Required]
+        [MaxLength(1000)]
         public string ProductUri { get; set; } = null!;
         /// <summary>
         /// The gds signed certificate of the Application
