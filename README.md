@@ -37,6 +37,9 @@ The API is documented with swagger so you can find an interactive documentation 
 
 If you want to implement your own REST endpoint the OPEN API JSON File can be found here: "https://localhost:8081/swagger/GDSwithREST API/swagger.json".
 
+<img width="1077" alt="image" src="https://github.com/romanett/GDSwithREST/assets/7413710/39dcbd9d-6f4f-4856-8ee0-59643dd50f96">
+
+
 ## Optional UI
 If you want a WEB-UI to interact with the GDS check out my other OPC UA GDS Project GDSwithUI which depends on the GDSwithREST for the Backend.
 
