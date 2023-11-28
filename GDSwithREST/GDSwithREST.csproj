@@ -42,7 +42,14 @@
   </ItemGroup>
 	
 	<Target Name="CopyComposeFile" AfterTargets="Build">
-		<Exec Command="copy $(ProjectDir)..\docker-compose.yml $(ProjectDir)..\GDSwithRest.Tests"/>
+		<ItemGroup>
+			<DataFiles Include="$(ProjectDir)..\docker-compose.yml"/>
+		</ItemGroup>
+		<Copy
+			SourceFiles="@(DataFiles)"
+			DestinationFolder =" $(ProjectDir)..\GDSwithRest.Tests"
+			SkipUnchangedFiles="true"
+			/>
 	</Target>
 
 </Project>
