@@ -8,7 +8,8 @@ services:
         - "8081:8081"
         - "58810:58810"
     depends_on:
-        - db
+        db:
+          condition: service_healthy
     volumes:
         - gds-data:/OPC Foundation
     environment:
@@ -23,5 +24,14 @@ services:
     environment:
         MSSQL_SA_PASSWORD: "jeh7he89u534758Ghe54"
         ACCEPT_EULA: "Y"
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "jeh7he89u534758Ghe54" -Q "SELECT 1" -b -o /dev/null
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - mssql:/var/opt/mssql
 volumes:
     gds-data:
+    mssql:
