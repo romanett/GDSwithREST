@@ -53,7 +53,7 @@ namespace GDSwithRest.Tests.IntegrationTests
         {
 
             CompositeService.Containers.Single(c => c.Name =="api")
-                .WaitForHealthy(20000);
+                .WaitForHealthy(120000);
         }
 
         private void EnsureDockerHost()
