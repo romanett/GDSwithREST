@@ -1,16 +1,8 @@
 using GDSwithRest.Tests.Infrastructure;
 using GDSwithREST.Controllers;
 using GDSwithREST.Domain.ApiModels;
-using GDSwithREST.Domain.Entities;
-using GDSwithREST.Domain.Repositories;
 using GDSwithREST.Domain.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Moq;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace GDSwithRest.Tests.ApplicationsControllerTests;
 

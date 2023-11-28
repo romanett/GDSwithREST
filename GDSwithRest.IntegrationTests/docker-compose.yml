@@ -1,0 +1,27 @@
+version: '3.4'
+name: "gdswithrest"
+services:
+  api:
+    image: "ghcr.io/romanett/gdswithrest:2023-11-28"
+    ports:
+        - "8080:8080"
+        - "8081:8081"
+        - "58810:58810"
+    depends_on:
+        - db
+    volumes:
+        - gds-data:/OPC Foundation
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=457834587hgedv343
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/OPC Foundation/HTTPSCert/aspnetapp.pfx
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+        
+  db:
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+        - "1433:1433"
+    environment:
+        MSSQL_SA_PASSWORD: "jeh7he89u534758Ghe54"
+        ACCEPT_EULA: "Y"
+volumes:
+    gds-data:
