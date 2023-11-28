@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /sa_pw.txt
 /GDSwithRest.Tests/docker-compose.yml
+/GDSwithRest.IntegrationTests/docker-compose.yml
