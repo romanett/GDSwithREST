@@ -9,6 +9,7 @@
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
+  
   <ItemGroup>
     <PackageReference Include="Ductus.FluentDocker" Version="2.10.59" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
@@ -27,6 +28,12 @@
   <ItemGroup>
     <ProjectReference Include="..\GDSwithREST.Domain\GDSwithREST.Domain.csproj" />
     <ProjectReference Include="..\GDSwithREST\GDSwithREST.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="docker-compose.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

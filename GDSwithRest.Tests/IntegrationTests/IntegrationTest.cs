@@ -1,4 +1,5 @@
 ﻿using Ductus.FluentDocker.Extensions;
+using Ductus.FluentDocker.Model.Common;
 using Ductus.FluentDocker.Model.Compose;
 using Ductus.FluentDocker.Services;
 using Ductus.FluentDocker.Services.Impl;
@@ -19,7 +20,7 @@ namespace GDSwithRest.Tests.IntegrationTests
         protected override ICompositeService Build()
         {
             var file = Path.Combine(Directory.GetCurrentDirectory(),
-                "..\\..\\..\\..\\docker-compose.yml");
+                (TemplateString) "docker-compose.yml");
 
             return new DockerComposeCompositeService(
                 DockerHost,

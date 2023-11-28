@@ -40,5 +40,9 @@
     <ProjectReference Include="..\GDSwithREST.Domain\GDSwithREST.Domain.csproj" />
     <ProjectReference Include="..\GDSwithREST.Infrastructure\GDSwithREST.Infrastructure.csproj" />
   </ItemGroup>
+	
+	<Target Name="CopyComposeFile" AfterTargets="Build">
+		<Exec Command="copy $(SolutionDir)\docker-compose.yml $(SolutionDir)\GDSwithRest.Tests"/>
+	</Target>
 
 </Project>
