@@ -2,6 +2,8 @@
 
 This Application is an OPC UA Global Discovery Server for certificate management with a REST-Interface for managing the application.
 
+[![codecov](https://codecov.io/github/romanett/GDSwithREST/graph/badge.svg?token=PCRAT47Y2D)](https://codecov.io/github/romanett/GDSwithREST)
+
 ## OPC UA Features
 
 The Application provides an OPC UA endpoint with the URL: "opc.tcp://localhost:58810/GlobalDiscoveryServer".
