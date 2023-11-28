@@ -40,16 +40,4 @@
     <ProjectReference Include="..\GDSwithREST.Domain\GDSwithREST.Domain.csproj" />
     <ProjectReference Include="..\GDSwithREST.Infrastructure\GDSwithREST.Infrastructure.csproj" />
   </ItemGroup>
-	
-	<Target Name="CopyComposeFile" AfterTargets="Build">
-		<ItemGroup>
-			<DataFiles Include="$(ProjectDir)..\docker-compose.yml"/>
-		</ItemGroup>
-		<Copy
-			SourceFiles="@(DataFiles)"
-			DestinationFolder =" $(ProjectDir)..\GDSwithRest.Tests"
-			SkipUnchangedFiles="true"
-			/>
-	</Target>
-
 </Project>

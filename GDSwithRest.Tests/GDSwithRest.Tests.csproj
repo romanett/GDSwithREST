@@ -30,4 +30,17 @@
     <ProjectReference Include="..\GDSwithREST\GDSwithREST.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="docker-compose.yml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+    
+	<Target Name="CopyComposeFile" BeforeTargets="Build">
+		<ItemGroup>
+			<DataFiles Include="$(ProjectDir)..\docker-compose.yml" />
+		</ItemGroup>
+		<Copy SourceFiles="@(DataFiles)" DestinationFolder=" $(ProjectDir)" SkipUnchangedFiles="true" />
+	</Target>
+
 </Project>
