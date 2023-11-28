@@ -42,7 +42,7 @@
   </ItemGroup>
 	
 	<Target Name="CopyComposeFile" AfterTargets="Build">
-		<Exec Command="copy $(SolutionDir)\docker-compose.yml $(SolutionDir)\GDSwithRest.Tests"/>
+		<Exec Command="copy $(ProjectDir)..\docker-compose.yml $(ProjectDir)..\GDSwithRest.Tests"/>
 	</Target>
 
 </Project>
