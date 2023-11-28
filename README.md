@@ -4,9 +4,9 @@ This Application is an OPC UA Global Discovery Server for certificate management
 
 ## OPC UA Features
 
-The Application provides an OPC UA endpoint with the URL: "opc.tcp://HOSTNAME:58810/GlobalDiscoveryServer".
+The Application provides an OPC UA endpoint with the URL: "opc.tcp://localhost:58810/GlobalDiscoveryServer".
 
-At this Endpoint OPC UA Application which support the Pull Model can register.
+At this Endpoint OPC UA Applications which support the Pull Model can register.
 
 For registering OPC UA Applications that support the Push Model a separate OPC UA GDS Client is needed, e g. the one provided by the OPC Foundation as a Windows Application:
 https://github.com/OPCFoundation/UA-.NETStandard-Samples/tree/master/Samples/GDS
@@ -27,15 +27,23 @@ This user has only a limited ability to search for applications.
 System Administrator:
 Username: sysadmin, PW: demo
 
-This user is defined for server push management and has the ability to access the server configuration nodes of the GDS server to update the server certificate and the trust lists. Server push configuration management is not a requirement for a GDS server and only supported here to demonstrate the functionality.
+This user is defined for server push management and has the ability to access the server configuration nodes of the GDS server to update the server certificate and the trust lists.
 
 ## REST Features
 
-The applications REST-API can be reached with the following endpoint: "https://HOSTNAME:8081/".
+The applications REST-API can be reached with the following endpoint: "https://localhost:8081/".
 
-The API is documented with swagger so you can find an interactive documentation here: "https://HOSTNAME:8081/swagger".
+The API is documented with swagger so you can find an interactive documentation here: "https://localhost:8081/swagger".
 
-If you want to implement your own REST endpoint the OPEN API JSON File can be found here: "https://HOSTNAME:8081/swagger/GDSwithREST API/swagger.json".
+If you want to implement your own REST endpoint the OPEN API JSON File can be found here: "https://localhost:8081/swagger/GDSwithREST API/swagger.json".
+
+<img width="1077" alt="image" src="https://github.com/romanett/GDSwithREST/assets/7413710/39dcbd9d-6f4f-4856-8ee0-59643dd50f96">
+
+
+## Optional UI
+If you want a WEB-UI to interact with the GDS check out my other OPC UA GDS Project GDSwithUI which depends on the GDSwithREST for the Backend.
+
+[GDSwithUI](https://github.com/romanett/GDSwithUI/)
 
 ## Deployment
 
@@ -48,22 +56,23 @@ For seamless deployment use the Docker-Compose file to setup the Application + t
 ## How to switch to local references with fixes instead of the upstream NuGet packages
 
 1. Clone https://github.com/romanett/UA-.NETStandard
-2. Switch to branch https://github.com/romanett/GDSwithREST/tree/BetaGDSReference -> clone
-3. Put both Projects into the same folder
+2. Clone https://github.com/romanett/GDSwithREST/
+3. Switch to branch BetaGDSReference
+4. Put both Projects into the same folder
 5. Build Project Opc.Ua.Gds.Server.Common
 6. Build Project GDSwithREST
-7. Run the GDSwithREST using docker-compose up
+7. Run GDSwithREST using docker-compose up
 
 ## Disclaimer
 
 This application is a proof of concept.
-It is not tested and not meant for use in a productive environment.
+It is inherently unsecure not meant for use in a productive environment.
 
 In the current implementation severe security concerns apply:
  - the database password is contained in the docker compose file as well as the application.config
  - full access to the db is granted via the SA user
  - the selfsigned server certificate & pw is stored in the git repository
- - the API can be accessed without authentification
+ - the API can be accessed without authentification (see branch authentification_authorization for a reference implementation)
  - No logging is implemented
  - The OPC UA Endpoint uses a hardcoded PW
 
