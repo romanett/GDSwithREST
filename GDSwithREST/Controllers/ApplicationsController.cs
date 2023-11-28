@@ -28,10 +28,8 @@ namespace GDSwithREST.Controllers
         /// <param name="applicationsDatabase"></param>
         public ApplicationsController(IApplicationRepository applicationRepository, IApplicationsDatabase applicationsDatabase)
         {
-            ArgumentNullException.ThrowIfNull(applicationRepository);
-            ArgumentNullException.ThrowIfNull(applicationsDatabase);
-            _applicationRepository = applicationRepository;
-            _applicationsDatabase = applicationsDatabase;
+            _applicationRepository = applicationRepository ?? throw new ArgumentNullException(nameof(applicationRepository));
+            _applicationsDatabase = applicationsDatabase ?? throw new ArgumentNullException(nameof(applicationsDatabase));
         }
         /// <summary>
         /// Returns all registered applications

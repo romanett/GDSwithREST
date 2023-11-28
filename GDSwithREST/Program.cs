@@ -31,6 +31,8 @@ builder.Services.AddSingleton<IGdsService, GdsService>();
 builder.Services.AddHostedService<GdsBackgroundService>();
 builder.Services.AddControllers();
 
+builder.Services.AddHealthChecks();
+
 //Enable OpenApiDocumenation
 builder.Services.AddOpenApiDocument(options =>
 { 
@@ -55,6 +57,8 @@ app.UseSwaggerUi3();
 
 //Map Endpoints
 app.MapControllers();
+
+app.MapHealthChecks("/hc");
 
 //GET: /
 app.MapGet("/", (IGdsService gds) => gds.GetEndpointURLs());

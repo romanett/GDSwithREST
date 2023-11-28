@@ -7,6 +7,9 @@ COPY ["GDSwithREST/HTTPSCert", "/OPC Foundation/HTTPSCert"]
 EXPOSE 8080
 EXPOSE 8081
 EXPOSE 58810
+RUN apt-get update 
+RUN apt-get --yes install curl
+HEALTHCHECK --interval=5s --timeout=10s --retries=3 CMD curl --silent --fail https://localhost:8081/hc -k || exit 1
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src

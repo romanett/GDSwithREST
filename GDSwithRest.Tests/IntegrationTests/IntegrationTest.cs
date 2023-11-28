@@ -7,10 +7,9 @@ namespace GDSwithRest.Tests.IntegrationTests
 {
     public class IntegrationTest : DockerComposeTestBase
     {
-        //[Fact]
+        [Fact]
         public async Task TestDatabaseMigration()
         {
-            //Thread.Sleep(100000);
             var index = await $"https://localhost:8081/".Wget();
 
             Assert.NotNull(index);
@@ -29,7 +28,8 @@ namespace GDSwithRest.Tests.IntegrationTests
                     ComposeFilePath = new List<string> { file },
                     ForceRecreate = true,
                     RemoveOrphans = true,
-                    StopOnDispose = true
+                    StopOnDispose = true,
+                    ComposeVersion = ComposeVersion.V2
                 });
         }
     }

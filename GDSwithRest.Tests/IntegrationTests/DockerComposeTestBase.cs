@@ -1,4 +1,5 @@
 ﻿using Ductus.FluentDocker.Services;
+using Ductus.FluentDocker.Services.Extensions;
 
 namespace GDSwithRest.Tests.IntegrationTests
 {
@@ -50,6 +51,9 @@ namespace GDSwithRest.Tests.IntegrationTests
 
         protected virtual void OnContainerInitialized()
         {
+
+            CompositeService.Containers.Single(c => c.Name =="api")
+                .WaitForHealthy(20000);
         }
 
         private void EnsureDockerHost()
