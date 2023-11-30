@@ -120,7 +120,7 @@ namespace GDSwithREST.Controllers
         {
             ArgumentNullException.ThrowIfNull(certificateGroupService);
 
-            if (_applicationRepository.GetApplicationById(id) is null)
+            if (_applicationRepository.GetApplicationById(id).Result is null)
                 return NotFound();
 
             try

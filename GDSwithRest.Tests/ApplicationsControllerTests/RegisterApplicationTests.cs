@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using GDSwithREST.Controllers;
 using GDSwithREST.Domain.ApiModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace GDSwithRest.Tests.ApplicationsControllerTests
 {
