@@ -5,7 +5,7 @@ namespace GDSwithREST.Domain.Services
 {
     public interface ICertificateGroupService : ICertificateGroup
     {
-        public List<CertificateGroup> CertificateGroups { get; }
-        public Task<X509Certificate2Collection> GetTrustList(CertificateGroup certificateGroup);
+        public List<CertificateGroupService> CertificateGroups { get; }
+        public Task<X509Certificate2Collection> GetTrustList();
     }
 }

@@ -160,6 +160,7 @@
         </CertificateGroups>
         <KnownHostNames/>
         <ShutdownDelay>5</ShutdownDelay>
+		<UsersDatabaseStorePath>%LocalApplicationData%/OPC Foundation/GDS/gdsusersdb.json</UsersDatabaseStorePath>
       </GlobalDiscoveryServerConfiguration>
     </ua:XmlElement>
   </Extensions>

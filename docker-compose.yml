@@ -2,7 +2,7 @@ version: '3.4'
 name: "gdswithrest"
 services:
   api:
-    image: "ghcr.io/romanett/gdswithrest:2023-11-28"
+    image: "ghcr.io/romanett/gdswithrest:2023-12-22"
     ports:
         - "8080:8080"
         - "8081:8081"

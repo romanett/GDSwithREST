@@ -158,7 +158,7 @@ namespace GDSwithREST.Controllers
                     }
                     if (certificateGroup != null)
                     {
-                       await certificateGroupService.RevokeCertificateAsync(x509).ConfigureAwait(false);
+                       await certificateGroup.RevokeCertificateAsync(x509).ConfigureAwait(false);
                     }
                 }
             }

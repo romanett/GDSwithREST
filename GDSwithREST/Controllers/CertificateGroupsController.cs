@@ -78,7 +78,7 @@ namespace GDSwithREST.Controllers
             {
                 return NotFound();
             }
-            var trustedCertificatesCollection = await _certificateGroupService.GetTrustList(certificateGroup);
+            var trustedCertificatesCollection = await certificateGroup.GetTrustList();
             var trustList =
                 from cert in trustedCertificatesCollection
                 select new X509CertificateApiModel(cert);
