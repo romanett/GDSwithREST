@@ -3,8 +3,7 @@ using Opc.Ua;
 using Opc.Ua.Configuration;
 using Opc.Ua.Gds.Server;
 using Opc.Ua.Gds.Server.Database;
-using Opc.Ua.Gds.Server.Database.Linq;
-using static Org.BouncyCastle.Math.EC.ECCurve;
+using Opc.Ua.Server.UserDatabase;
 
 namespace GDSwithREST.Domain.Services
 {
@@ -39,7 +38,7 @@ namespace GDSwithREST.Domain.Services
                     ConfigSectionName = "Opc.Ua.GlobalDiscoveryServer"
                 };
                 // load the application configuration.
-                await _applicationInstance.LoadApplicationConfiguration("/OPC Foundation/GDS/config/Opc.Ua.GlobalDiscoveryServer.Config.xml", false);
+                await _applicationInstance.LoadApplicationConfiguration("GdsConfig\\Opc.Ua.GlobalDiscoveryServer.Config.xml", false);
                 // check the application certificate.
                 await _applicationInstance.CheckApplicationInstanceCertificate(false, 0);
 
@@ -49,7 +48,7 @@ namespace GDSwithREST.Domain.Services
                 // get the DatabaseStorePath configuration parameter.
                 GlobalDiscoveryServerConfiguration gdsConfiguration = _applicationInstance.ApplicationConfiguration.ParseExtension<GlobalDiscoveryServerConfiguration>();
                 string usersDatabaseStorePath = Utils.ReplaceSpecialFolderNames(gdsConfiguration.UsersDatabaseStorePath);
-                var usersDatabase = JsonUsersDatabase.Load(usersDatabaseStorePath);
+                var usersDatabase = JsonUserDatabase.Load(usersDatabaseStorePath);
                 //await _certificateGroup.Init();
                 var gdsServer = new GlobalDiscoverySampleServer(
                         _applications,
@@ -61,12 +60,12 @@ namespace GDSwithREST.Domain.Services
                 //start GDS
                 await _applicationInstance.Start(gdsServer);
 
-                //trust GDS CA
-                var defaultCertificateGroup = _certificateGroups.CertificateGroups.SingleOrDefault(cg => cg.Id.Identifier is (uint)CertificateGroupType.DefaultApplicationGroup);
-                if (defaultCertificateGroup is null)
-                    throw new Exception("Failed to initialze GDS CA Certifcate");
+                ////trust GDS CA
+                //var defaultCertificateGroup = _certificateGroups.CertificateGroups.SingleOrDefault(cg => cg.Id.Identifier is (uint)CertificateGroupType.DefaultApplicationGroup);
+                //if (defaultCertificateGroup is null)
+                //    throw new Exception("Failed to initialze GDS CA Certifcate");
 
-                await _applicationInstance.AddOwnCertificateToTrustedStoreAsync(defaultCertificateGroup.Certificate, stoppingToken);
+                //await _applicationInstance.AddOwnCertificateToTrustedStoreAsync(defaultCertificateGroup.Certificate, stoppingToken);
 
                 var endpoints = _applicationInstance.Server.GetEndpoints().Select(e => e.EndpointUrl).Distinct();
 

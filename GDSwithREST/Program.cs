@@ -53,7 +53,7 @@ app.UseHttpsRedirection();
 app.UseOpenApi();
 
 //GET: /swagger
-app.UseSwaggerUi3();
+app.UseSwaggerUi();
 
 //Map Endpoints
 app.MapControllers();
