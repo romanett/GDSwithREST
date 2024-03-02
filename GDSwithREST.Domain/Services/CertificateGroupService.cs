@@ -1,5 +1,6 @@
 ﻿using Opc.Ua;
 using Opc.Ua.Gds.Server;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 
 namespace GDSwithREST.Domain.Services
@@ -10,9 +11,10 @@ namespace GDSwithREST.Domain.Services
 
         public override CertificateGroupService Create(
             string storePath,
-            CertificateGroupConfiguration certificateGroupConfiguration)
+            CertificateGroupConfiguration certificateGroupConfiguration,
+            [Optional] string trustedIssuerCertificatesStorePath)
         {
-            var cg = new CertificateGroupService(storePath, certificateGroupConfiguration);
+            var cg = new CertificateGroupService(storePath, certificateGroupConfiguration, trustedIssuerCertificatesStorePath);
             CertificateGroups.Add(cg);
             return cg;
         }
@@ -21,10 +23,12 @@ namespace GDSwithREST.Domain.Services
 
         protected CertificateGroupService(
             string authoritiesStorePath,
-            CertificateGroupConfiguration certificateGroupConfiguration
+            CertificateGroupConfiguration certificateGroupConfiguration,
+            [Optional] string trustedIssuerCertificatesStorePath
             )
             : base(authoritiesStorePath,
-            certificateGroupConfiguration)
+            certificateGroupConfiguration,
+            trustedIssuerCertificatesStorePath)
         { }
 
         public async Task<X509Certificate2Collection> GetTrustList()

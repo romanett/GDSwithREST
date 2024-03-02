@@ -16,7 +16,6 @@ builder.Services.AddDbContext<GdsDbContext>(
                 builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddScoped<IApplicationNameRepository, ApplicationNameRepository>();
 builder.Services.AddScoped<ICertificateRequestRepository, CertificateRequestRepository>();
-builder.Services.AddScoped<ICertificateStoreRepository, CertificateStoreRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<IPersistencyRepository, PersistencyRepository>();
 builder.Services.AddScoped<IServerEndpointRepository, ServerEndpointRepository>();

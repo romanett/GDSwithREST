@@ -20,7 +20,6 @@ namespace GDSwithREST.Infrastructure
         public virtual DbSet<ApplicationName> ApplicationNames { get; set; }
         public virtual DbSet<Application> Applications { get; set; }
         public virtual DbSet<CertificateRequest> CertificateRequests { get; set; }
-        public virtual DbSet<CertificateStore> CertificateStores { get; set; }
         public virtual DbSet<ServerEndpoint> ServerEndpoints { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -52,12 +51,6 @@ namespace GDSwithREST.Infrastructure
 
             modelBuilder.Entity<Application>(entity =>
             {
-                entity.HasIndex(e => e.HttpsTrustListId)
-                    .HasDatabaseName("IX_FK_Applications_HttpsTrustListId");
-
-                entity.HasIndex(e => e.TrustListId)
-                    .HasDatabaseName("IX_FK_Applications_TrustListId");
-
                 entity.Property(e => e.HttpsTrustListId).IsRequired(false);
 
                 entity.Property(e => e.TrustListId).IsRequired(false);
@@ -78,17 +71,6 @@ namespace GDSwithREST.Infrastructure
 
                 entity.Property(e => e.ServerCapabilities).HasMaxLength(500);
 
-                entity.HasOne(d => d.HttpsTrustList)
-                    .WithMany(p => p.ApplicationsHttpsTrustList)
-                    .HasForeignKey(d => d.HttpsTrustListId)
-                    .HasConstraintName("FK_Applications_HttpsTrustListId")
-                    .OnDelete(DeleteBehavior.ClientSetNull);
-
-                entity.HasOne(d => d.TrustList)
-                    .WithMany(p => p.ApplicationsTrustList)
-                    .HasForeignKey(d => d.TrustListId)
-                    .HasConstraintName("FK_Applications_TrustListId")
-                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             modelBuilder.Entity<CertificateRequest>(entity =>
@@ -120,19 +102,6 @@ namespace GDSwithREST.Infrastructure
                     .WithMany(p => p.CertificateRequests)
                     .HasForeignKey(d => d.ApplicationId)
                     .HasConstraintName("FK_CertificateRequests_Applications");
-            });
-
-            modelBuilder.Entity<CertificateStore>(entity =>
-            {
-                entity.Property(e => e.Id).HasColumnName("ID");
-
-                entity.Property(e => e.AuthorityId)
-                    .HasMaxLength(50)
-                    .IsRequired(false);
-
-                entity.Property(e => e.Path)
-                    .IsRequired()
-                    .HasMaxLength(256);
             });
 
             modelBuilder.Entity<ServerEndpoint>(entity =>
