@@ -16,15 +16,13 @@ https://github.com/OPCFoundation/UA-.NETStandard-Samples/tree/master/Samples/GDS
 For registering with the GDS the following credentails can be used:
 The sample GDS servers only implement the username/password authentication. The following combinations can be used to connect to the servers:
 
-GDS Administrator:
-Username: appadmin, PW: demo
+CertificateAuthorityAdmin:
+Username: CertificateAuthorityAdmin, PW: demo
 
-This user has the ability to register and unregister applications and to issue new certificates. It should be used by the GDS Client application to connect.
 
-GDS User:
-Username: appuser, PW: demo
+DiscoveryAdmin:
+Username: DiscoveryAdmin, PW: demo
 
-This user has only a limited ability to search for applications.
 
 System Administrator:
 Username: sysadmin, PW: demo
