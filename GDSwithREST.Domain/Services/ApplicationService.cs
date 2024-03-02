@@ -577,13 +577,45 @@ namespace GDSwithREST.Domain.Services
 
         public override bool SetApplicationTrustLists(
             NodeId applicationId,
-            string trustListId,
-            string httpsTrustListId
+            string certificateTypeId,
+            string trustListId
             )
         {
             using var scope = _serviceScopeFactory.CreateScope();
             var applicationRepository = scope.ServiceProvider.GetRequiredService<IApplicationRepository>();
-            var certificateStoreRepository = scope.ServiceProvider.GetRequiredService<ICertificateStoreRepository>();
+
+            Guid id = GetNodeIdGuid(applicationId);
+            var application = applicationRepository.GetApplicationById(id).Result;
+
+            if (application == null || string.IsNullOrEmpty(trustListId))
+            {
+                return false;
+            }
+
+
+            if(certificateTypeId == nameof(Opc.Ua.ObjectTypeIds.ApplicationCertificateType))
+            {
+                application.TrustListId = trustListId;
+            }
+            if(certificateTypeId == nameof(Opc.Ua.ObjectTypeIds.HttpsCertificateType))
+            {
+                application.HttpsTrustListId = trustListId;
+            }
+
+            applicationRepository.SaveChanges();
+
+            return true;
+        }
+
+        public override bool GetApplicationTrustLists(
+            NodeId applicationId,
+            string certificateTypeId,
+            out string trustListId
+            )
+        {
+            trustListId = null!;
+            using var scope = _serviceScopeFactory.CreateScope();
+            var applicationRepository = scope.ServiceProvider.GetRequiredService<IApplicationRepository>();
 
             Guid id = GetNodeIdGuid(applicationId);
             var application = applicationRepository.GetApplicationById(id).Result;
@@ -591,29 +623,25 @@ namespace GDSwithREST.Domain.Services
             if (application == null)
             {
                 return false;
-            }
+            }            
 
-            application.TrustListId = null;
-            application.HttpsTrustListId = null;
-
-            if (trustListId != null)
+            if (certificateTypeId == nameof(Opc.Ua.ObjectTypeIds.ApplicationCertificateType))
             {
-                var certificateStore = certificateStoreRepository.GetCertificateStoreByPath(httpsTrustListId);
-
-                if (certificateStore != null)
+                if(string.IsNullOrEmpty(application.TrustListId))
                 {
-                    application.TrustListId = certificateStore.Id;
+                    return false;
                 }
+                trustListId = application.TrustListId;
+                return true;
             }
-
-            if (httpsTrustListId != null)
+            if (certificateTypeId == nameof(Opc.Ua.ObjectTypeIds.HttpsCertificateType))
             {
-                var certificateStore = certificateStoreRepository.GetCertificateStoreByPath(httpsTrustListId);
-
-                if (certificateStore != null)
+                if (string.IsNullOrEmpty(application.HttpsTrustListId))
                 {
-                    application.HttpsTrustListId = certificateStore.Id;
+                    return false;
                 }
+                trustListId = application.HttpsTrustListId;
+                return true;
             }
 
             applicationRepository.SaveChanges();

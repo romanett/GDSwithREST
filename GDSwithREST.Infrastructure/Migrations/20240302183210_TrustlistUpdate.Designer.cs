@@ -4,6 +4,7 @@ using GDSwithREST.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GDSwithREST.Infrastructure.Migrations
 {
     [DbContext(typeof(GdsDbContext))]
-    partial class GdsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240302183210_TrustlistUpdate")]
+    partial class TrustlistUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -18,11 +18,8 @@
         public string ServerCapabilities { get; set; } = null!;
         public byte[] Certificate { get; set; } = Array.Empty<byte>();
         public byte[]? HttpsCertificate { get; set; }
-        public int? TrustListId { get; set; }
-        public int? HttpsTrustListId { get; set; }
-
-        public CertificateStore HttpsTrustList { get; set; } = null!;
-        public CertificateStore TrustList { get; set; } = null!;
+        public string? TrustListId { get; set; }
+        public string? HttpsTrustListId { get; set; }
         public ICollection<ApplicationName> ApplicationNames { get; set; }
         public ICollection<CertificateRequest> CertificateRequests { get; set; }
         public ICollection<ServerEndpoint> ServerEndpoints { get; set; }
