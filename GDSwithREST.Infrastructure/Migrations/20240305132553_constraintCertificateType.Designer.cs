@@ -4,6 +4,7 @@ using GDSwithREST.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GDSwithREST.Infrastructure.Migrations
 {
     [DbContext(typeof(GdsDbContext))]
-    partial class GdsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240305132553_constraintCertificateType")]
+    partial class constraintCertificateType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,7 +211,7 @@ namespace GDSwithREST.Infrastructure.Migrations
                     b.HasIndex("ApplicationId")
                         .HasDatabaseName("IX_FK_TrustLists_ApplicationId");
 
-                    b.HasIndex("CertificateType", "ApplicationId")
+                    b.HasIndex("CertificateType")
                         .IsUnique();
 
                     b.ToTable("TrustLists");

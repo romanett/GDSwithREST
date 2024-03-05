@@ -19,7 +19,7 @@ builder.Services.AddScoped<ICertificateRequestRepository, CertificateRequestRepo
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<IPersistencyRepository, PersistencyRepository>();
 builder.Services.AddScoped<IServerEndpointRepository, ServerEndpointRepository>();
-
+builder.Services.AddScoped<ITrustListRepository, TrustListRepository>();
 
 //Inject dependencies for the GDS
 builder.Services.AddSingleton<IApplicationsDatabase, ApplicationService>();

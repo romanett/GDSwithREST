@@ -68,7 +68,7 @@ namespace GDSwithREST.Domain.Services
                 application.CertificateRequests.Add(request);
             }
 
-            applicationRepository.SaveChanges();
+            applicationRepository.SaveChanges(application);
 
             return new NodeId(request.RequestId, NamespaceIndex);
 
@@ -120,7 +120,7 @@ namespace GDSwithREST.Domain.Services
                 application.CertificateRequests.Add(request);
             }
 
-            applicationRepository.SaveChanges();
+            applicationRepository.SaveChanges(application);
 
             return new NodeId(request.RequestId, NamespaceIndex);
 

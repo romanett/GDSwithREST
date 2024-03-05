@@ -45,8 +45,9 @@ namespace GDSwithREST.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public void SaveChanges()
+        public void SaveChanges(Application application)
         {
+            _context.Applications.Update(application);
             _context.SaveChanges();
         }
     }

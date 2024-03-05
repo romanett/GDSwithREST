@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GDSwithREST.Infrastructure.Migrations
 {
     [DbContext(typeof(GdsDbContext))]
-    [Migration("20240302183210_TrustlistUpdate")]
-    partial class TrustlistUpdate
+    [Migration("20240305135137_FixConstraint")]
+    partial class FixConstraint
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -57,9 +57,6 @@ namespace GDSwithREST.Infrastructure.Migrations
                     b.Property<byte[]>("HttpsCertificate")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<string>("HttpsTrustListId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ProductUri")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -69,9 +66,6 @@ namespace GDSwithREST.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("TrustListId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -190,6 +184,39 @@ namespace GDSwithREST.Infrastructure.Migrations
                     b.ToTable("ServerEndpoints");
                 });
 
+            modelBuilder.Entity("GDSwithREST.Domain.Entities.TrustList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("ID");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ApplicationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CertificateType")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId")
+                        .HasDatabaseName("IX_FK_TrustLists_ApplicationId");
+
+                    b.HasIndex("CertificateType", "ApplicationId")
+                        .IsUnique();
+
+                    b.ToTable("TrustLists");
+                });
+
             modelBuilder.Entity("GDSwithREST.Domain.Entities.ApplicationName", b =>
                 {
                     b.HasOne("GDSwithREST.Domain.Entities.Application", "Application")
@@ -224,6 +251,18 @@ namespace GDSwithREST.Infrastructure.Migrations
                     b.Navigation("Application");
                 });
 
+            modelBuilder.Entity("GDSwithREST.Domain.Entities.TrustList", b =>
+                {
+                    b.HasOne("GDSwithREST.Domain.Entities.Application", "Application")
+                        .WithMany("TrustLists")
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_TrustLists_ApplicationId");
+
+                    b.Navigation("Application");
+                });
+
             modelBuilder.Entity("GDSwithREST.Domain.Entities.Application", b =>
                 {
                     b.Navigation("ApplicationNames");
@@ -231,6 +270,8 @@ namespace GDSwithREST.Infrastructure.Migrations
                     b.Navigation("CertificateRequests");
 
                     b.Navigation("ServerEndpoints");
+
+                    b.Navigation("TrustLists");
                 });
 #pragma warning restore 612, 618
         }

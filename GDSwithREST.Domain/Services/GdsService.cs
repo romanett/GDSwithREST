@@ -60,13 +60,7 @@ namespace GDSwithREST.Domain.Services
                 //start GDS
                 await _applicationInstance.Start(gdsServer);
 
-                ////trust GDS CA
-                //var defaultCertificateGroup = _certificateGroups.CertificateGroups.SingleOrDefault(cg => cg.Id.Identifier is (uint)CertificateGroupType.DefaultApplicationGroup);
-                //if (defaultCertificateGroup is null)
-                //    throw new Exception("Failed to initialze GDS CA Certifcate");
-
-                //await _applicationInstance.AddOwnCertificateToTrustedStoreAsync(defaultCertificateGroup.Certificate, stoppingToken);
-
+                
                 var endpoints = _applicationInstance.Server.GetEndpoints().Select(e => e.EndpointUrl).Distinct();
 
                 foreach (var endpoint in endpoints)

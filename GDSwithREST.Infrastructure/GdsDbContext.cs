@@ -21,6 +21,7 @@ namespace GDSwithREST.Infrastructure
         public virtual DbSet<Application> Applications { get; set; }
         public virtual DbSet<CertificateRequest> CertificateRequests { get; set; }
         public virtual DbSet<ServerEndpoint> ServerEndpoints { get; set; }
+        public virtual DbSet<TrustList> TrustLists { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -48,13 +49,31 @@ namespace GDSwithREST.Infrastructure
                     .HasForeignKey(d => d.ApplicationId)
                     .HasConstraintName("FK_ApplicationNames_ApplicationId");
             });
+            modelBuilder.Entity<TrustList>(entity => {
+                entity.HasIndex(e => e.ApplicationId)
+                    .HasDatabaseName("IX_FK_TrustLists_ApplicationId");
+
+                entity.HasIndex(e => new { e.CertificateType, e.ApplicationId })
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.CertificateType)
+                    .HasMaxLength(200)
+                    .IsRequired(true);
+
+                entity.Property(e => e.Path)
+                    .IsRequired()
+                    .HasMaxLength(1000);
+
+                entity.HasOne(d => d.Application)
+                    .WithMany(p => p.TrustLists)
+                    .HasForeignKey(d => d.ApplicationId)
+                    .HasConstraintName("FK_TrustLists_ApplicationId");
+            });
 
             modelBuilder.Entity<Application>(entity =>
             {
-                entity.Property(e => e.HttpsTrustListId).IsRequired(false);
-
-                entity.Property(e => e.TrustListId).IsRequired(false);
-
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.ApplicationName)

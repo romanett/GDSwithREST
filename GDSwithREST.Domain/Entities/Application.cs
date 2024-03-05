@@ -7,6 +7,7 @@
             ApplicationNames = new HashSet<ApplicationName>();
             CertificateRequests = new HashSet<CertificateRequest>();
             ServerEndpoints = new HashSet<ServerEndpoint>();
+            TrustLists = new HashSet<TrustList>();
         }
 
         public int Id { get; set; }
@@ -18,10 +19,9 @@
         public string ServerCapabilities { get; set; } = null!;
         public byte[] Certificate { get; set; } = Array.Empty<byte>();
         public byte[]? HttpsCertificate { get; set; }
-        public string? TrustListId { get; set; }
-        public string? HttpsTrustListId { get; set; }
         public ICollection<ApplicationName> ApplicationNames { get; set; }
         public ICollection<CertificateRequest> CertificateRequests { get; set; }
         public ICollection<ServerEndpoint> ServerEndpoints { get; set; }
+        public ICollection<TrustList> TrustLists { get; set; }
     }
 }

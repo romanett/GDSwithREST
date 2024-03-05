@@ -46,7 +46,7 @@ namespace GDSwithRest.Tests.Infrastructure
             Applications.Remove(application);
         }
 
-        public void SaveChanges()
+        public void SaveChanges(Application application)
         {
             return;
         }

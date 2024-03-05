@@ -12,20 +12,6 @@ namespace GDSwithREST.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "CertificateStores",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Path = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    AuthorityId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CertificateStores", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Applications",
                 columns: table => new
                 {
@@ -38,23 +24,11 @@ namespace GDSwithREST.Infrastructure.Migrations
                     ProductUri = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     ServerCapabilities = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Certificate = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    HttpsCertificate = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    TrustListId = table.Column<int>(type: "int", nullable: true),
-                    HttpsTrustListId = table.Column<int>(type: "int", nullable: true)
+                    HttpsCertificate = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Applications", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Applications_HttpsTrustListId",
-                        column: x => x.HttpsTrustListId,
-                        principalTable: "CertificateStores",
-                        principalColumn: "ID");
-                    table.ForeignKey(
-                        name: "FK_Applications_TrustListId",
-                        column: x => x.TrustListId,
-                        principalTable: "CertificateStores",
-                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -85,7 +59,7 @@ namespace GDSwithREST.Infrastructure.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ApplicationId = table.Column<int>(type: "int", nullable: false),
+                    ApplicationId = table.Column<int>(type: "int", nullable: true),
                     State = table.Column<int>(type: "int", nullable: false),
                     CertificateGroupId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CertificateTypeId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -103,8 +77,7 @@ namespace GDSwithREST.Infrastructure.Migrations
                         name: "FK_CertificateRequests_Applications",
                         column: x => x.ApplicationId,
                         principalTable: "Applications",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -127,20 +100,31 @@ namespace GDSwithREST.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "TrustLists",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationId = table.Column<int>(type: "int", nullable: false),
+                    Path = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    CertificateType = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TrustLists", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_TrustLists_ApplicationId",
+                        column: x => x.ApplicationId,
+                        principalTable: "Applications",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_FK_ApplicationNames_ApplicationId",
                 table: "ApplicationNames",
                 column: "ApplicationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FK_Applications_HttpsTrustListId",
-                table: "Applications",
-                column: "HttpsTrustListId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_FK_Applications_TrustListId",
-                table: "Applications",
-                column: "TrustListId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FK_CertificateRequests_Applications",
@@ -150,6 +134,11 @@ namespace GDSwithREST.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_FK_ServerEndpoints_ApplicationId",
                 table: "ServerEndpoints",
+                column: "ApplicationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FK_TrustLists_ApplicationId",
+                table: "TrustLists",
                 column: "ApplicationId");
         }
 
@@ -166,10 +155,10 @@ namespace GDSwithREST.Infrastructure.Migrations
                 name: "ServerEndpoints");
 
             migrationBuilder.DropTable(
-                name: "Applications");
+                name: "TrustLists");
 
             migrationBuilder.DropTable(
-                name: "CertificateStores");
+                name: "Applications");
         }
     }
 }

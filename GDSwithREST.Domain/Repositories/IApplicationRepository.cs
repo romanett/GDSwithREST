@@ -13,6 +13,6 @@ namespace GDSwithREST.Domain.Repositories
         /// <summary>
         /// persists the changes made to an Application instance
         /// </summary>
-        public void SaveChanges();
+        public void SaveChanges(Application application);
     }
 }

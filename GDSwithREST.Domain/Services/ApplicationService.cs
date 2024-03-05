@@ -96,6 +96,7 @@ namespace GDSwithREST.Domain.Services
                     applicationNameRepository.AddApplicationName(new ApplicationName() { ApplicationId = record.Id, Locale = applicationName.Locale, Text = applicationName.Text });
                 }
             }
+            applicationRepository.SaveChanges(record);
             m_lastCounterResetTime = DateTime.UtcNow;
             return new NodeId(applicationId, NamespaceIndex); ;
         }
@@ -122,6 +123,9 @@ namespace GDSwithREST.Domain.Services
             applicationNameRepository.RemoveApplicationNames(application.ApplicationNames.ToArray());
             serverEndpointRepository.RemoveServerEndpoints(application.ServerEndpoints.ToArray());
             applicationRepository.RemoveApplication(application);
+
+            certificateRequestRepository.SaveChanges();
+            applicationRepository.SaveChanges(application);
             m_lastCounterResetTime = DateTime.UtcNow;
         }
 
@@ -528,7 +532,7 @@ namespace GDSwithREST.Domain.Services
                 application.Certificate = certificate;
             }
 
-            applicationRepository.SaveChanges();
+            applicationRepository.SaveChanges(application);
 
 
             return true;
@@ -583,27 +587,33 @@ namespace GDSwithREST.Domain.Services
         {
             using var scope = _serviceScopeFactory.CreateScope();
             var applicationRepository = scope.ServiceProvider.GetRequiredService<IApplicationRepository>();
+            var trustListRepository = scope.ServiceProvider.GetRequiredService<ITrustListRepository>();
 
             Guid id = GetNodeIdGuid(applicationId);
             var application = applicationRepository.GetApplicationById(id).Result;
 
-            if (application == null || string.IsNullOrEmpty(trustListId))
+            if (application == null || string.IsNullOrEmpty(trustListId) || string.IsNullOrEmpty(certificateTypeId))
             {
                 return false;
             }
-
-
-            if(certificateTypeId == nameof(Opc.Ua.ObjectTypeIds.ApplicationCertificateType))
+            var trustList = trustListRepository.GetTrustListsByApplicationId(application.Id).Result
+                .SingleOrDefault(trustList => trustList.CertificateType == certificateTypeId);
+            
+            if (trustList == null)
             {
-                application.TrustListId = trustListId;
+                trustListRepository.AddTrustList(
+                    new TrustList
+                    {
+                        ApplicationId = application.Id,
+                        Application = application,
+                        CertificateType = certificateTypeId,
+                        Path = trustListId
+                    });
             }
-            if(certificateTypeId == nameof(Opc.Ua.ObjectTypeIds.HttpsCertificateType))
+            else
             {
-                application.HttpsTrustListId = trustListId;
+                trustList.Path = trustListId;
             }
-
-            applicationRepository.SaveChanges();
-
             return true;
         }
 
@@ -616,36 +626,24 @@ namespace GDSwithREST.Domain.Services
             trustListId = null!;
             using var scope = _serviceScopeFactory.CreateScope();
             var applicationRepository = scope.ServiceProvider.GetRequiredService<IApplicationRepository>();
+            var trustListRepository = scope.ServiceProvider.GetRequiredService<ITrustListRepository>();
 
             Guid id = GetNodeIdGuid(applicationId);
             var application = applicationRepository.GetApplicationById(id).Result;
 
-            if (application == null)
+            if (application == null || string.IsNullOrEmpty(certificateTypeId))
             {
                 return false;
-            }            
-
-            if (certificateTypeId == nameof(Opc.Ua.ObjectTypeIds.ApplicationCertificateType))
-            {
-                if(string.IsNullOrEmpty(application.TrustListId))
-                {
-                    return false;
-                }
-                trustListId = application.TrustListId;
-                return true;
             }
-            if (certificateTypeId == nameof(Opc.Ua.ObjectTypeIds.HttpsCertificateType))
+            var trustList = trustListRepository.GetTrustListsByApplicationId(application.Id).Result
+                .SingleOrDefault(trustList => trustList.CertificateType == certificateTypeId);
+            //var trustList = application.TrustLists.SingleOrDefault(trustList => trustList.CertificateType == certificateTypeId);
+
+            if (trustList == null)
             {
-                if (string.IsNullOrEmpty(application.HttpsTrustListId))
-                {
-                    return false;
-                }
-                trustListId = application.HttpsTrustListId;
-                return true;
+                return false;
             }
-
-            applicationRepository.SaveChanges();
-
+            trustListId = trustList.Path;
             return true;
         }
 
