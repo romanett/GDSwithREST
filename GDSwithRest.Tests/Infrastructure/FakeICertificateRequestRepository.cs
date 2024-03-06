@@ -23,7 +23,7 @@ namespace GDSwithRest.Tests.Infrastructure
 
         public void SaveChanges()
         {
-            throw new NotImplementedException();
+            return;
         }
     }
 }

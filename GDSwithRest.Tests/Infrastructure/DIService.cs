@@ -31,13 +31,14 @@ namespace GDSwithRest.Tests.Infrastructure
             return serviceScopeFactory;
         }
         public static IServiceScopeFactory GetServiceScopeFactory(IApplicationRepository inject, IServerEndpointRepository inject2, 
-            IApplicationNameRepository inject3, ICertificateRequestRepository inject4)
+            IApplicationNameRepository inject3, ICertificateRequestRepository inject4, ITrustListRepository inject5)
         {
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddScoped(sp => inject);
             serviceCollection.AddScoped(sp => inject2);
             serviceCollection.AddScoped(sp => inject3);
             serviceCollection.AddScoped(sp => inject4);
+            serviceCollection.AddScoped(sp => inject5);
             var serviceScopeFactory = serviceCollection.BuildServiceProvider().GetService<IServiceScopeFactory>();
 
             if (serviceScopeFactory is null)

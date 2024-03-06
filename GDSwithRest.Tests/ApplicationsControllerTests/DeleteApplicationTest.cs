@@ -20,6 +20,7 @@ namespace GDSwithRest.Tests.ApplicationsControllerTests
         private readonly FakeServerEndpointRepository _serverEndpointRepository;
         private readonly FakeApplicationNameRepository _applicationNameRepository;
         private readonly FakeICertificateRequestRepository _certificateRequestRepository;
+        private readonly FakeTrustListRepository _trusListRepository;
         private readonly CertificateGroupService _certificateGroupService;
 
         public DeleteApplicationTest()
@@ -28,7 +29,8 @@ namespace GDSwithRest.Tests.ApplicationsControllerTests
             _serverEndpointRepository = new FakeServerEndpointRepository();
             _applicationNameRepository = new FakeApplicationNameRepository();
             _certificateRequestRepository = new FakeICertificateRequestRepository();
-            var serviceScopeFactory = DIService.GetServiceScopeFactory(_applicationRepository, _serverEndpointRepository, _applicationNameRepository, _certificateRequestRepository);
+            _trusListRepository = new FakeTrustListRepository();
+            var serviceScopeFactory = DIService.GetServiceScopeFactory(_applicationRepository, _serverEndpointRepository, _applicationNameRepository, _certificateRequestRepository, _trusListRepository);
             _applicationService = new ApplicationService(serviceScopeFactory);
             _certificateGroupService = new CertificateGroupService();
         }
