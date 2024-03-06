@@ -108,6 +108,7 @@ namespace GDSwithREST.Domain.Services
             var serverEndpointRepository = scope.ServiceProvider.GetRequiredService<IServerEndpointRepository>();
             var applicationNameRepository = scope.ServiceProvider.GetRequiredService<IApplicationNameRepository>();
             var certificateRequestRepository = scope.ServiceProvider.GetRequiredService<ICertificateRequestRepository>();
+            var trustListRepository = scope.ServiceProvider.GetRequiredService<ITrustListRepository>();
 
             Guid id = GetNodeIdGuid(applicationId);
 
@@ -123,6 +124,7 @@ namespace GDSwithREST.Domain.Services
             applicationNameRepository.RemoveApplicationNames(application.ApplicationNames.ToArray());
             serverEndpointRepository.RemoveServerEndpoints(application.ServerEndpoints.ToArray());
             applicationRepository.RemoveApplication(application);
+            trustListRepository.RemoveTrustLists(application.TrustLists.ToArray());
 
             certificateRequestRepository.SaveChanges();
             applicationRepository.SaveChanges(application);
@@ -637,8 +639,7 @@ namespace GDSwithREST.Domain.Services
             }
             var trustList = trustListRepository.GetTrustListsByApplicationId(application.Id).Result
                 .SingleOrDefault(trustList => trustList.CertificateType == certificateTypeId);
-            //var trustList = application.TrustLists.SingleOrDefault(trustList => trustList.CertificateType == certificateTypeId);
-
+            
             if (trustList == null)
             {
                 return false;
